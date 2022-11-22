@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from '../../logo.png';
-
+import { Link } from 'react-router-dom'; 
 
 
 const Login = () => {
@@ -11,7 +11,9 @@ const Login = () => {
                 <div className="card-body login-card-body">
                     <div className="login-box">
                         <div className="login-logo">
+                            
                             <img className="card-img-top" src={ logo } alt="Logotipo" />
+                           
                         </div>
                         <form action="../../index3.html" method="post">
                             <div className="input-group mb-3">
@@ -45,8 +47,10 @@ const Login = () => {
                             </div>
 
                             <div>
-                                <button type="submit" className="btn btn-block btn-danger">Ingresar</button>
-                                <button className="btn btn-block btn-dark">Cancelar</button>
+                                <Link to={'/principal'} className="btn btn-block btn-danger">
+                                    Acceder al sistema
+                                </Link>
+                                
 
                             </div>
                         </form>
