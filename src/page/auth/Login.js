@@ -1,7 +1,11 @@
 import { React, useState, useEffect } from 'react';
 import logo from '../../logo.png';
-import { Link, useNavigate } from 'react-router-dom'; 
-import { login } from "../../utils/APIInvoke";
+import { useNavigate } from 'react-router-dom'; 
+import APIInvoke from '../../utils/APIInvoke';
+import Swal from 'sweetalert2';
+
+
+
 
 
 const Login = () => {
@@ -14,7 +18,7 @@ const Login = () => {
 
     const { username, password } = user;
     
-    const onchange = (e) =>{
+    const onChange = (e) =>{
 
         setUser({
             ...user,
@@ -26,18 +30,58 @@ const Login = () => {
         document.getElementById("username").focus();
     }, []);
 
+    const initLogin = async () => {
+        
+            const data = {
+                userName: user.username,
+                password: user.password
+        
+            };
+
+            const response = await APIInvoke.invokePOST(`/api/Auth/login`, data);
+            if(!response.succeeded){
+                //Validaciones
+                const msg = response.errors[0];
+                Swal.fire({
+                    title: '',
+                    text:msg,
+                    icon:'error',
+                    showConfirmButton:false,
+                    showDenyButton: true,
+                    denyButtonText: 'Aceptar',
+
+
+
+                });
+
+        
+            }else{
+                //Obtenemos token de acceso jwt
+                const jwt = response.data.accessToken;
+
+                //guardamos el token en local storage
+                localStorage.setItem('token',jwt);
+
+                //redireccionamos al home
+                navigate('/Home');
+
+
+
+
+            }
+      
+        
+        
+
+        
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
+        initLogin();
         
-        login(user, function(response) {
-            console.log(response);
-            if(response.succeeded){
-                localStorage.setItem("session", response.data.token);
-                navigate("/home");
-            }else{
-                alert("Hubo un error");
-            }
-        } )
+       
+           
 
         
     }
@@ -62,7 +106,8 @@ const Login = () => {
                                     id="username"
                                     name="username"
                                     value={username}
-                                    onChange={onchange}
+                                    onChange={onChange}
+                                    required
                                 />
                                 <div className="input-group-append">
                                     <div className="input-group-text">
@@ -79,7 +124,8 @@ const Login = () => {
                                     id="password"
                                     name="password"
                                     value={password}
-                                    onChange={onchange}
+                                    onChange={onChange}
+                                    required
                                 />
                                 <div className="input-group-append">
                                     <div className="input-group-text">

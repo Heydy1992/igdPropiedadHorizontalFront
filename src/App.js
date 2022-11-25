@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Login from '../src/page/auth/Login';
 import CreateUsr from './page/auth/CreateUsr';
-import Home from "./page/auth/Home";
+import Home from "./page/Home";
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" exact element={<CreateUsr />}/>
+          <Route path="/" exact element={<Login />}/>
           <Route path="/home" exact element={<Home />} />
         </Routes>
       </Router>
