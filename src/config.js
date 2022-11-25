@@ -1,5 +1,5 @@
 module.exports = {
     api:{
-        baseURL:"";
+        baseURL:"https://igdpropiedadhorizontalapi.azurewebsites.net"
     }
 }

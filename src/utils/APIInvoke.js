@@ -1,98 +1,48 @@
-import config from '../config'
+import config from '../config';
 
-class APIInvoke {
-    async invokeGET(resource, queryParams) {
+const axios = require('axios');
 
-        queryParams = queryParams || []
-        const queryString = queryParams.reduce((last, q, i) => last + `${i === 0 ? '?' : "&"}${q}`, '')
+const login = (user, callback) => {
+    axios.post(config.api.baseURL+"/api/Auth/login", user)
+        .then((res) => {
+            callback(res);
+        })
+        .catch((err) => {
+            callback(err);
+        })
 
-        const token = localStorage.getItem("token");
-        let bearer;
-        if (token === "") {
-            bearer = "";
-        } else {
-            bearer = `${token}`;
-        }
+};
 
-        const data = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-auth-token': bearer
-            }
-        }
-        const url = `${config.api.baseURL}${resource}${queryString}`
-        let response = (await (await fetch(url, data)).json())
-        return response
-    }
+const register = (user, callback) => {
+    axios.post(config.api.baseURL+"/api/Auth/register", user)
+        .then((res) => {
+            return res;
+        })
+        .catch((err) => {
+            return err;
+        })
 
-    async invokePUT(resource, body) {
+};
 
-        const token = localStorage.getItem("token");
-        let bearer;
-        if (token === "") {
-            bearer = "";
-        } else {
-            bearer = `${token}`;
-        }
 
-        const data = {
-            method: 'PUT',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'x-auth-token': bearer
-            }
-        }
-        const url = `${config.api.baseURL}${resource}`
-        let response = (await (await fetch(url, data)).json())
-        return response
-    }
-
-    async invokePOST(resource, body) {
-
-        const token = localStorage.getItem("token");
-        let bearer;
-        if (token === "") {
-            bearer = "";
-        } else {
-            bearer = `${token}`;
-        }
-
-        const data = {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'x-auth-token': bearer
-            }
-        }
-        const url = `${config.api.baseURL}${resource}`
-        let response = (await (await fetch(url, data)).json())
-        return response
-    }
-
-    async invokeDELETE(resource) {
-
-        const token = localStorage.getItem("token");
-        let bearer;
-        if (token === "") {
-            bearer = "";
-        } else {
-            bearer = `${token}`;
-        }
-
-        const data = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-auth-token': bearer
-            }
-        }
-        const url = `${config.api.baseURL}${resource}`
-        let response = (await (await fetch(url, data)).json())
-        return response
-    }
+const validation = (token, callback) => {
+    axios({
+        method: "get",
+        url: config.api.baseURL+"/user/valid/token",
+        headers:{
+            Authorization: "Bearer" + token,
+            "Content-Type":"application/json"
+        },
+    }).then((resp) => {
+        callback(resp);
+    }).catch((error) => {
+        callback(error);
+    });
 }
 
-export default new APIInvoke()
+
+export {
+    login,
+    register,
+    validation,
+}

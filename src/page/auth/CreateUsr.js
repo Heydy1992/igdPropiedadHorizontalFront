@@ -13,6 +13,7 @@ const CreateUsr = () => {
                 </div>
 
                 <PersonGeneral />
+                
               
             </div>
 
