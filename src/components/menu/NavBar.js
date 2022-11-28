@@ -16,28 +16,24 @@ const NavBar = () => {
               <i className="fas fa-bars" />
             </Link>
           </li>
-         
-        </ul>
-
+        </ul>  
         <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-            
+          <li className="nav-item">
             <div className="navbar-search-block">
-                <form className="form-inline">
+              <form className="form-inline">
                 <div className="input-group input-group-sm">
+                  <div className="input-group-append">
                     
-                    <div className="input-group-append">
-                    
-                    </div>
+                  </div>
                 </div>
-                </form>
+              </form>
             </div>
-            </li>
+          </li>
 
-            <li className="nav-item d-none d-sm-inline-block">
-                <h3 className="text-sm text-muted" > Administrador del sistema propiedad horizontal</h3>
+          <li className="nav-item d-none d-sm-inline-block">
+            <h3 className="text-sm text-muted" > Administrador del sistema propiedad horizontal</h3>
                 
-            </li>
+          </li>
        
          
         
