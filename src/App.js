@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Login from '../src/page/auth/Login';
-import ConsultDataTable from './components/Elements/ListDataTable';
-import CreateUsr from './page/auth/CreateUsr';
 import Home from "./page/Home";
-import ListPerson from './page/person/ListPerson';
+import ListOwner from './page/owner/ListOwner';
+import CreateOwner from './page/owner/CreateOwner';
+import DepartamentAndCity from './components/Elements/DepartamentAndCity';
 
 
 function App() {
@@ -15,7 +15,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" exact element={<Login />}/>
-          <Route path="/home" exact element={<ListPerson />} />
+          <Route path="/home" exact element={<Home />} />
+          <Route path="/listOwner" exact element={<ListOwner/>} />
+          <Route path="/createOwner" exact element={<DepartamentAndCity />} />
         </Routes>
       </Router>
     </div>

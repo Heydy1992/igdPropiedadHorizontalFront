@@ -27,7 +27,7 @@ const Menu = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="../../index2.html" className="nav-link">
+                <Link to="/listOwner" className="nav-link">
                   <i className="far fa-circle nav-icon" />
                   <p>Residentes</p>
                 </Link>
