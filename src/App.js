@@ -4,7 +4,7 @@ import Login from '../src/page/auth/Login';
 import Home from "./page/Home";
 import ListOwner from './page/owner/ListOwner';
 import CreateOwner from './page/owner/CreateOwner';
-import DepartamentAndCity from './components/Elements/DepartamentAndCity';
+
 
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
           <Route path="/" exact element={<Login />}/>
           <Route path="/home" exact element={<Home />} />
           <Route path="/listOwner" exact element={<ListOwner/>} />
-          <Route path="/createOwner" exact element={<DepartamentAndCity />} />
+          <Route path="/createOwner" exact element={<CreateOwner />} />
         </Routes>
       </Router>
     </div>

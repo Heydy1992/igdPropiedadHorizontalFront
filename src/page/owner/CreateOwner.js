@@ -1,22 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useNavigate } from "react";
 import { Link } from "react-router-dom";
+import DepartamentAndCity from "../../components/Elements/DepartamentAndCity";
 import ContentHeader from "../../components/home/ContentHeader";
 import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
+import APIInvoke from "../../utils/APIInvoke";
+
 
 const CreateOwner = () => {
+
+  
+
   const [person, setPerson] = useState({
     document: "",
-    documentType: "",
+    documentType: 0,
     rol: "",
     firstLastName: "",
     secondLastName: "",
     firstName: "",
     middleName: "",
-    departament: "",
+    department: "",
     city: "",
     gender: "",
+    email: "",
+    phone: "",
+    address: ""
   });
 
   const {
@@ -27,9 +36,12 @@ const CreateOwner = () => {
     secondLastName,
     firstName,
     middleName,
-    departament,
+    department,
     city,
     gender,
+    email,
+    phone,
+    address
   } = person;
 
 
@@ -42,10 +54,43 @@ const CreateOwner = () => {
       ...person,
       [e.target.name]: e.target.value,
     });
+
+    
   };
 
-  function handleSubmit(e) {
+
+  const createOwner = async () => {
+    const data = {
+      person: {
+        document: person.document,
+        documentType: person.documentType,
+        rol: person.rol,
+        firstLastName: person.firstLastName,
+        secondLastName:person.secondLastName,
+        firstName:person.firstName,
+        middleName: person.middleName,
+        department:person.department,
+        city:person.city,
+        gender: person.gender,
+        data: {
+          email: person.email,
+          phone:person.phone,
+          address: person.address
+        }
+        
+      }
+
+      
+    }
+
+    const response = await APIInvoke.invokePOST(`/api/Persons`,data)
+    console.log(response);
+  }
+  
+  const handleSubmit = (e) => {
     e.preventDefault();
+    createOwner();
+    
   }
 
   return (
@@ -65,9 +110,9 @@ const CreateOwner = () => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="row">
-                  <Link className="btn btn-app bg-primary">
+                  <button type="submit" className="btn btn-app bg-primary">
                     <i className="fas fa-save"></i> Grabar
-                  </Link>
+                  </button>
                   <div className="col-sm-3">
                     <Link className="btn btn-app bg-danger">
                       <i className="fa fa-ban"></i> Cancelar
@@ -98,11 +143,11 @@ const CreateOwner = () => {
                         onChange={handleChange}
                         required
                       >
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
+                        <option>Tipo de documento</option>
+                        <option value={1}>CC</option>
+                        <option value={2}>TI</option>
+                        <option value={3}>Pasaporte</option>
+                        <option value={4}>NIT</option>
                       </select>
                     </div>
                   </div>
@@ -117,11 +162,10 @@ const CreateOwner = () => {
                         onChange={handleChange}
                         required
                       >
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
+                        <option >Selecciona tipo de usuario</option>
+                        <option value={1}>Propetario</option>
+                        <option value={2}>Arrendatario</option>
+                        
                       </select>
                     </div>
                   </div>
@@ -175,45 +219,10 @@ const CreateOwner = () => {
                       required
                     />
                   </div>
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Departamento</label>
-                      <select
-                        className="form-control"
-                        id="departament"
-                        name="departament"
-                        value={departament}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Ciudad</label>
-                      <select
-                        className="form-control"
-                        id="city"
-                        name="city"
-                        value={city}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                      </select>
-                    </div>
-                  </div>
+                  
+                   <DepartamentAndCity departament = {department} city={city} handleChange={handleChange}/>
+                  
+                  
                   <div className="col-sm-4">
                     <div className="form-group">
                       <label>Sexo</label>
@@ -225,14 +234,58 @@ const CreateOwner = () => {
                         onChange={handleChange}
                         required
                       >
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
+                        <option>Selecciona el sexo</option>
+                        <option value={1}>Mujer</option>
+                        <option value={2}>Hombre</option>
+                        
                       </select>
                     </div>
                   </div>
+
+                  <div className="col-sm-4">
+                    <div className="form-group">
+                      <label>Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        name="email"
+                        value={email}
+                        onChange={handleChange}
+                        required
+                      />  
+                    </div>
+                  </div> 
+
+                  <div className="col-sm-4">
+                    <div className="form-group">
+                      <label>Celular</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="phone"
+                        name="phone"
+                        value={phone}
+                        onChange={handleChange}
+                        required
+                      />  
+                    </div>
+                  </div> 
+
+                   <div className="col-sm-4">
+                    <div className="form-group">
+                      <label>Dirección</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="address"
+                        name="address"
+                        value={address}
+                        onChange={handleChange}
+                        required
+                      />  
+                    </div>
+                  </div>  
                 </div>
               </form>
             </div>
