@@ -67,6 +67,7 @@ class APIInvoke {
                     'x-auth-token': bearer
                 }
             }
+           
             const url = `${config.api.baseURL}${resource}`
             let response = (await (await fetch(url, data)).json())
             return response

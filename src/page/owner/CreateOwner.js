@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useNavigate } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import DepartamentAndCity from "../../components/Elements/DepartamentAndCity";
 import ContentHeader from "../../components/home/ContentHeader";
 import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
-
+import Swal from 'sweetalert2';
 
 const CreateOwner = () => {
 
   
-
+  const navigate = useNavigate();
   const [person, setPerson] = useState({
     document: "",
     documentType: 0,
-    rol: "",
+    role: 0,
     firstLastName: "",
     secondLastName: "",
     firstName: "",
     middleName: "",
-    department: "",
-    city: "",
-    gender: "",
+    department: 0,
+    city: 0,
+    gender:0,
     email: "",
     phone: "",
     address: ""
@@ -31,7 +31,7 @@ const CreateOwner = () => {
   const {
     document,
     documentType,
-    rol,
+    role,
     firstLastName,
     secondLastName,
     firstName,
@@ -60,31 +60,71 @@ const CreateOwner = () => {
 
 
   const createOwner = async () => {
+    
     const data = {
-      person: {
-        document: person.document,
-        documentType: person.documentType,
-        rol: person.rol,
-        firstLastName: person.firstLastName,
-        secondLastName:person.secondLastName,
-        firstName:person.firstName,
-        middleName: person.middleName,
-        department:person.department,
-        city:person.city,
-        gender: person.gender,
-        data: {
-          email: person.email,
-          phone:person.phone,
-          address: person.address
+      
+        "person":{
+          "firstName":person.firstName,
+          "middleName": person.middleName,
+          "firstLastName": person.firstLastName,
+          "secondLastName":person.secondLastName,
+          "document": person.document,
+          "department":person.department,
+          "city":person.city,
+          "Gender": parseInt(person.gender),
+          "role": parseInt(person.role),
+          "documentType": parseInt(person.documentType),
+          "dataContact": {
+            "email": person.email,
+            "phone":person.phone,
+            "address": person.address,
+            "typePhone":1
+          }
         }
         
-      }
+      
 
       
     }
+    
+    const response = await APIInvoke.invokePOST(`/api/Persons`, data)
+    let msg = "";
+    let icon = "";
+    if(response.succeeded){
+      navigate("/listOwner");
+      msg = "Registro creado exitosamente";
+      icon="success";
+      setPerson({
+        document: "",
+        documentType: 0,
+        role: 0,
+        firstLastName: "",
+        secondLastName: "",
+        firstName: "",
+        middleName: "",
+        department: 0,
+        city: 0,
+        gender:0,
+        email: "",
+        phone: "",
+        address: ""
+      });
+      
+    }else{
+      msg="Por favor verificar los datos ingresados";
+      icon="error";
+    }  
+    Swal.fire({
+      title: '',
+      text:msg,
+      icon:icon,
+      showConfirmButton:false,
+      showDenyButton: true,
+      denyButtonText: 'Aceptar',
+    });
+    
 
-    const response = await APIInvoke.invokePOST(`/api/Persons`,data)
-    console.log(response);
+    
   }
   
   const handleSubmit = (e) => {
@@ -156,9 +196,9 @@ const CreateOwner = () => {
                       <label>ROL</label>
                       <select
                         className="form-control"
-                        id="rol"
-                        name="rol"
-                        value={rol}
+                        id="role"
+                        name="role"
+                        value={role}
                         onChange={handleChange}
                         required
                       >

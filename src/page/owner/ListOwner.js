@@ -13,8 +13,9 @@ const ListOwner = () => {
 
   //Listar propetarios
   const listOwner = async () => {
-    const response = await APIInvoke.invokeGET('/api/Administrator?page=1&pageSize=10');
+    const response = await APIInvoke.invokeGET('/api/Administrator/owner?page=1&pageSize=10');
     setOwner(response.items);
+    
     
 
   };
@@ -73,8 +74,9 @@ const ListOwner = () => {
                       owner.map(
                         item => 
                           <tr key={item.id}>
-                            <td>{item.person.document}</td>
-                            <td>{`${item.person.firstName} ${item.person.middleName} ${item.person.firstLastName} ${item.person.secondLastName}`}</td>
+                            
+                            <td>{item.document}</td>
+                            <td>{`${item.firstName} ${item.middleName} ${item.firstLastName} ${item.secondLastName}`}</td>
                             <td></td>
                             <td>
                               <button className="btn btn-sm btn-primary">Editar</button>&nbsp;

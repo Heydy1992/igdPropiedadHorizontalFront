@@ -4,6 +4,7 @@ import Login from '../src/page/auth/Login';
 import Home from "./page/Home";
 import ListOwner from './page/owner/ListOwner';
 import CreateOwner from './page/owner/CreateOwner';
+import EditOwner from './page/owner/EditOwner';
 
 
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/home" exact element={<Home />} />
           <Route path="/listOwner" exact element={<ListOwner/>} />
           <Route path="/createOwner" exact element={<CreateOwner />} />
+          <Route path="/EditOwner" exact element={<EditOwner />} />
         </Routes>
       </Router>
     </div>
