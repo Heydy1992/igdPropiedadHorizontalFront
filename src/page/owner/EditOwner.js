@@ -22,7 +22,7 @@ const EditOwner = () => {
           <section className="content">
             <div className="card card-danger">
               <div className="card-body">
-                <form onSubmit={handleSubmit}>
+                <form >
                   <div className="row">
                     <button type="submit" className="btn btn-app bg-primary">
                       <i className="fas fa-save"></i> Grabar
@@ -42,7 +42,7 @@ const EditOwner = () => {
                         id="document"
                         name="document"
                         value={document}
-                        onChange={handleChange}
+                        
                         required
                       />
                     </div>
@@ -53,8 +53,7 @@ const EditOwner = () => {
                           className="form-control"
                           id="documentType"
                           name="documentType"
-                          value={documentType}
-                          onChange={handleChange}
+                          
                           required
                         >
                           <option>Tipo de documento</option>
@@ -72,8 +71,7 @@ const EditOwner = () => {
                           className="form-control"
                           id="role"
                           name="role"
-                          value={role}
-                          onChange={handleChange}
+                         
                           required
                         >
                           <option>Selecciona tipo de usuario</option>
@@ -90,8 +88,7 @@ const EditOwner = () => {
                         className="form-control"
                         id="firstLastName"
                         name="firstLastName"
-                        value={firstLastName}
-                        onChange={handleChange}
+                       
                         required
                       />
                     </div>
@@ -102,8 +99,7 @@ const EditOwner = () => {
                         className="form-control"
                         id="secondLastName"
                         name="secondLastName"
-                        value={secondLastName}
-                        onChange={handleChange}
+                        
                         required
                       />
                     </div>
@@ -115,8 +111,7 @@ const EditOwner = () => {
                         className="form-control"
                         id="firstName"
                         name="firstName"
-                        value={firstName}
-                        onChange={handleChange}
+                        
                         required
                       />
                     </div>
@@ -127,16 +122,13 @@ const EditOwner = () => {
                         className="form-control"
                         id="middleName"
                         name="middleName"
-                        value={middleName}
-                        onChange={handleChange}
+                       
                         required
                       />
                     </div>
 
                     <DepartamentAndCity
-                      departament={department}
-                      city={city}
-                      handleChange={handleChange}
+                    
                     />
 
                     <div className="col-sm-4">
@@ -146,8 +138,7 @@ const EditOwner = () => {
                           className="form-control"
                           id="gender"
                           name="gender"
-                          value={gender}
-                          onChange={handleChange}
+                         
                           required
                         >
                           <option>Selecciona el sexo</option>
@@ -165,8 +156,7 @@ const EditOwner = () => {
                           className="form-control"
                           id="email"
                           name="email"
-                          value={email}
-                          onChange={handleChange}
+                         
                           required
                         />
                       </div>
@@ -180,8 +170,7 @@ const EditOwner = () => {
                           className="form-control"
                           id="phone"
                           name="phone"
-                          value={phone}
-                          onChange={handleChange}
+                        
                           required
                         />
                       </div>
@@ -195,8 +184,7 @@ const EditOwner = () => {
                           className="form-control"
                           id="address"
                           name="address"
-                          value={address}
-                          onChange={handleChange}
+                        
                           required
                         />
                       </div>
