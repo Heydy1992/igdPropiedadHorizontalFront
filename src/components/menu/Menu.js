@@ -21,7 +21,7 @@ const Menu = () => {
             </Link>
             <ul className="nav nav-treeview">
               <li className="nav-item">
-                <Link to="../../index.html" className="nav-link">
+                <Link to="/listUsr" className="nav-link">
                   <i className="far fa-circle nav-icon" />
                   <p>Usuarios</p>
                 </Link>
