@@ -7,21 +7,21 @@ import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 
 
-const ListUsr = () => {
+const ListBuilding = () => {
 
-  const [user, setUser ] = useState([]);
+  const [building, setBuilding] = useState([]);
 
   //Listar propetarios
-  const listUser = async () => {
-    const response = await APIInvoke.invokeGET('/api/Administrator');
-    setUser(response.items);
+  const listBuilding = async () => {
+    const response = await APIInvoke.invokeGET('/api/Building?page=1&pageSize=10');
+    setBuilding(response.items);
     
     
 
   };
 
   useEffect(() => {
-    listUser();
+    listBuilding();
     
   },[]);
 
@@ -36,13 +36,13 @@ const ListUsr = () => {
         <ContentHeader
           title={"Listado de Usuarios"}
           breadCrumb1={"Inicio"}
-          breadCrumb2={"Usuarios"}
+          breadCrumb2={"Propiedades"}
           route={"#"}
         />
         <section className="content">
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title"><Link to={"/createUsr"}className="btn btn-block btn-primary btn-sm">Crear Usuarios</Link></h3>
+              <h3 className="card-title"><Link to={"/createBuilding"}className="btn btn-block btn-primary btn-sm">Crear Propiedad</Link></h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -57,29 +57,27 @@ const ListUsr = () => {
             <div className="card-body">
               <div className="card">
                 <table
-                  id="listUser"
+                  id="listBuilding"
                   className="table table-bordered table-hover"
                 >
                   <thead>
                     <tr>
-                      <th>Documento</th>
-                      <th>Nombre Usuario</th>
-                      <th>Usuario</th>
-                      <th>ROL</th>
+                      <th>Nombre</th>
+                      <th>Propetario</th>
+                      <th>Tipo de inmueble</th>
                       <th>Opciones</th>
                      
                     </tr>
                   </thead>
                   <tbody>
                     {
-                      user.map(
+                      building.map(
                         item => 
                           <tr key={item.id}>
                             
-                            <td>{item.person.document}</td>
-                            <td>{`${item.person.firstName} ${item.person.middleName} ${item.person.firstLastName} ${item.person.secondLastName}`}</td>
-                            <td>{item.userName}</td>
-                            <td>{item.person.role}</td>
+                            <td>{item.codeBuilding}</td>
+                            <td>{item.owner}</td>
+                            <td>{item.type}</td>
                             <td>
                               <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-primary" >Editar</Link>&nbsp;
                              
@@ -100,5 +98,5 @@ const ListUsr = () => {
   );
 };
 
-export default ListUsr;
+export default ListBuilding;
 

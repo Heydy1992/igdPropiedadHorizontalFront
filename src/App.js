@@ -7,7 +7,14 @@ import CreateOwner from './page/owner/CreateOwner';
 import EditOwner from './page/owner/EditOwner';
 import CreateUsr from './page/auth/CreateUsr';
 import ListUsr from  './page/auth/ListUsr';
-
+import ListBuilding from './page/building/ListBuilding';
+import CreateBuilding from './page/building/createBuilding';
+import ListCommonArea from './page/commonArea/ListCommonArea';
+import CreateCommonArea from './page/commonArea/CreateCommonArea';
+import ListTariff from './page/tariff/ListTariff';
+import CreateTariff from './page/tariff/CreateTariff';
+import ListNews from './page/news/ListNews';
+import CreateNews from './page/news/CreateNews';
 
 
 function App() {
@@ -24,6 +31,14 @@ function App() {
           <Route path="/editOwner/:idOwner" exact element={<EditOwner />} />
           <Route path="/createUsr" exact element={<CreateUsr />} />
           <Route path="/listUsr" exact element={<ListUsr/>} />
+          <Route path="/listBuilding" exact element={<ListBuilding/>} />
+          <Route path="/createBuilding" exact element={<CreateBuilding/>} />
+          <Route path="/listCommonArea" exact element={<ListCommonArea />} />
+          <Route path="/createCommonArea" exact element={<CreateCommonArea/>} />
+          <Route path="/listTariff" exact element={<ListTariff />} />
+          <Route path="/createTariff" exact element={<CreateTariff />} />
+          <Route path="/listNews" exact element={<ListNews />} />
+          <Route path="/createNews" exact element={<CreateNews />} />
         </Routes>
       </Router>
     </div>

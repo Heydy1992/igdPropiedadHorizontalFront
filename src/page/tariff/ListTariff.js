@@ -7,21 +7,21 @@ import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 
 
-const ListUsr = () => {
+const ListTariff= () => {
 
-  const [user, setUser ] = useState([]);
+  const [tariff, setTariff] = useState([]);
 
   //Listar propetarios
-  const listUser = async () => {
-    const response = await APIInvoke.invokeGET('/api/Administrator');
-    setUser(response.items);
+  const listTariff = async () => {
+    const response = await APIInvoke.invokeGET('/api/Invoices/tariffs?page=1&pageSize=10');
+    setTariff(response.items);
     
     
 
   };
 
   useEffect(() => {
-    listUser();
+    listTariff();
     
   },[]);
 
@@ -34,15 +34,15 @@ const ListUsr = () => {
       <SidebarContainer />
       <div className="content-wrapper">
         <ContentHeader
-          title={"Listado de Usuarios"}
+          title={"Listado de Tarifas"}
           breadCrumb1={"Inicio"}
-          breadCrumb2={"Usuarios"}
+          breadCrumb2={"Tarifas"}
           route={"#"}
         />
         <section className="content">
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title"><Link to={"/createUsr"}className="btn btn-block btn-primary btn-sm">Crear Usuarios</Link></h3>
+              <h3 className="card-title"><Link to={"/createTariff"}className="btn btn-block btn-primary btn-sm">Crear tarifas</Link></h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -57,29 +57,29 @@ const ListUsr = () => {
             <div className="card-body">
               <div className="card">
                 <table
-                  id="listUser"
+                  id="listTariff"
                   className="table table-bordered table-hover"
                 >
                   <thead>
                     <tr>
-                      <th>Documento</th>
-                      <th>Nombre Usuario</th>
-                      <th>Usuario</th>
-                      <th>ROL</th>
+                      <th>Concepto</th>
+                      <th>Coeficiente</th>
+                      <th>Valor</th>
+                      <th>Fecha Vencimiento</th>
                       <th>Opciones</th>
                      
                     </tr>
                   </thead>
                   <tbody>
                     {
-                      user.map(
+                      tariff.map(
                         item => 
                           <tr key={item.id}>
                             
-                            <td>{item.person.document}</td>
-                            <td>{`${item.person.firstName} ${item.person.middleName} ${item.person.firstLastName} ${item.person.secondLastName}`}</td>
-                            <td>{item.userName}</td>
-                            <td>{item.person.role}</td>
+                            <td>{item.concept}</td>
+                            <td>{item.coefficient}</td>
+                            <td>{item.value}</td>
+                            <td>{item.expirationDate.substr(0,10)}</td>
                             <td>
                               <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-primary" >Editar</Link>&nbsp;
                              
@@ -100,5 +100,5 @@ const ListUsr = () => {
   );
 };
 
-export default ListUsr;
+export default ListTariff;
 

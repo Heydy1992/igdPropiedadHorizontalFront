@@ -47,7 +47,7 @@ const Menu = () => {
             </Link>
             <ul className="nav nav-treeview">
               <li className="nav-item">
-                <Link to="../../index.html" className="nav-link">
+                <Link to="/listBuilding" className="nav-link">
                   <i className="far fa-circle nav-icon" />
                   <p>Inmuebles</p>
                 </Link>
@@ -59,7 +59,7 @@ const Menu = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="../../index3.html" className="nav-link">
+                <Link to="/listCommonArea" className="nav-link">
                   <i className="far fa-circle nav-icon" />
                   <p>Areas comunes</p>
                 </Link>
@@ -82,14 +82,14 @@ const Menu = () => {
                   <p>Facturación</p>
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="../../index2.html" className="nav-link">
+              <li className="nav-item" >
+                <Link to="/listTariff"  className="nav-link">
                   <i className="far fa-circle nav-icon" />
                   <p>Tarifas</p>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="../../index3.html" className="nav-link">
+                <Link to="/listNews" className="nav-link">
                   <i className="far fa-circle nav-icon" />
                   <p>Novedades</p>
                 </Link>
