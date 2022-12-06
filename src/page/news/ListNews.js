@@ -37,15 +37,15 @@ const ListNews = () => {
       <SidebarContainer />
       <div className="content-wrapper">
         <ContentHeader
-          title={"Listado de Novedades"}
+          
           breadCrumb1={"Inicio"}
           breadCrumb2={"Novedades"}
           route={"#"}
         />
         <section className="content">
-          <div className="card">
+          <div className="card card-danger">
             <div className="card-header">
-              <h3 className="card-title"><Link to={"/createNews"}className="btn btn-block btn-danger btn-sm">Crear una novedad</Link></h3>
+              <h3 className="card-title">Listado de novedades</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -58,6 +58,17 @@ const ListNews = () => {
               </div>
             </div>
             <div className="card-body">
+
+            <div className="row">
+                <div className=" col-sm-2">
+                  <Link to={"/createNews"}className="btn btn-block btn-danger btn-sm">Crear Novedades</Link>
+                </div>
+              
+            </div>
+
+            <div className="row">
+              &nbsp;
+            </div>
               <div className="card">
                 <table
                   id="listNews"

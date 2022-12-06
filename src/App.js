@@ -15,6 +15,9 @@ import ListTariff from './page/tariff/ListTariff';
 import CreateTariff from './page/tariff/CreateTariff';
 import ListNews from './page/news/ListNews';
 import CreateNews from './page/news/CreateNews';
+import ListMaintenance from './page/maintenance/ListMaintenance';
+import CreateMaintenance from './page/maintenance/CreateMaintenance';
+
 
 
 function App() {
@@ -39,6 +42,8 @@ function App() {
           <Route path="/createTariff" exact element={<CreateTariff />} />
           <Route path="/listNews" exact element={<ListNews />} />
           <Route path="/createNews" exact element={<CreateNews />} />
+          <Route path="/listMaintenance" exact element={<ListMaintenance />} />
+          <Route path="/createMaintenance" exact element={<CreateMaintenance />} />
         </Routes>
       </Router>
     </div>
