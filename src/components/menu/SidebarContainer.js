@@ -18,20 +18,7 @@ const SidebarContainer = () => {
           </span>
         </Link>
         <div className="sidebar">
-          <div className="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div className="image">
-              <img
-                src="../../dist/img/user2-160x160.jpg"
-                alt="User Image"
-                className="img-circle elevation-2"
-              />
-            </div>
-            <div className="info">
-              <Link href="#" className="d-block">
-                Alexander Pierce
-              </Link>
-            </div>
-          </div>
+          
 
           <Menu />
         </div>

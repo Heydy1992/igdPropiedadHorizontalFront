@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
 import APIInvoke from "../../utils/APIInvoke";
+import Select from 'react-select'
 
 const BuildingSelect= ({ handleChange }) => {
-  const [coefficient, setCoefficient] = useState([]);
+  const [building, setBuilding] = useState([]);
  
+
   
   
 
-  //Listar departamentos
-  const listCoefficient = async () => {
-    const response = await APIInvoke.invokeGET("/api/Invoices/coefficients");
-        setCoefficient(response.data);
+  //Listar Propiedades
+  const listBuilding = async () => {
+    const response = await APIInvoke.invokeGET("/api/Building?page=1&pageSize=10");
+        setBuilding(response.items);
+       
+        
   };
 
 
 
 
   useEffect(() => {
-    listCoefficient();
+    listBuilding();
   }, []);
 
 
@@ -27,21 +31,23 @@ const BuildingSelect= ({ handleChange }) => {
     <>
       <div className="col-sm-4">
         <div className="form-group">
-          <label>Coeficiente</label>
+          <label>Propiedades</label>
           <select
             className="form-control"
-            id="coefficient"
-            name="coefficient"
+            id="building"
+            name="building"
            
             onClick={(e) =>{handleChange(e)}}
             required
           >
-            {coefficient && coefficient.map((item) => (
+            {building && building.map((item) => (
               <option value={item.id} key={item.id}>
-                {item.coefficientType}
+                {item.codeBuilding}
               </option>
             ))}
           </select>
+           
+          
         </div>
       </div>
 

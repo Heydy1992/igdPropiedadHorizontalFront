@@ -7,7 +7,6 @@ import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import Swal from "sweetalert2";
 import Concept from "../../components/Elements/Concept";
-import Coefficient from "../../components/Elements/Coefficient";
 import BuildingSelect from "../../components/Elements/BuildingSelect";
 
 
@@ -16,7 +15,7 @@ const CreateNews = () => {
 
   
   const [news, setNews] = useState({
-    building: "",
+    building: 0,
     concept: 0,
     value: 0,
     expirationDate:""
@@ -27,7 +26,7 @@ const CreateNews = () => {
 
   
 
-
+  
   
   const handleChange = (e) => {
 
@@ -42,7 +41,7 @@ const CreateNews = () => {
 
   const createNews = async () => {
     const data = {
-      "idBuilding": news.code,
+      "idBuilding": parseInt(news.building),
       "idConcept": parseInt(news.concept),
       "value": parseInt(news.value),
       "expirationDate": news.expirationDate,
@@ -64,7 +63,7 @@ const CreateNews = () => {
       icon = "success";
 
       setNews({
-        code: "",
+        building: 0,
         concept: 0,
         coefficient: 0,
         value: 0,
@@ -115,12 +114,13 @@ const CreateNews = () => {
                   </div>
                 </div>
 
-                <div className="row">
-                  <BuildingSelect />
+                <div className="row"> 
+                  <BuildingSelect  building={building} handleChange={handleChange}/>
 
                   <Concept concept={concept} handleChange={handleChange} />
 
-
+                </div>
+                <div className="row"> 
                   <div className="col-sm-4">
                     <label>Valor</label>
                     <input

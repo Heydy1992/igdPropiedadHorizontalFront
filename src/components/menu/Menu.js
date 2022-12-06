@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faUsers, faCity, faBusinessTime, faWallet} from '@fortawesome/free-solid-svg-icons';
+
 
 const Menu = () => {
   return (
@@ -13,8 +16,11 @@ const Menu = () => {
         >
           <li className="nav-item">
             <Link to="#" className="nav-link" >
-              <i className="fa-thin fa-people-arrows" />
+            <FontAwesomeIcon icon={faUsers} />&nbsp; &nbsp;
+              
+
               <p>
+
                 PERSONAS
                 <i className="right fas fa-angle-left" />
               </p>
@@ -39,7 +45,7 @@ const Menu = () => {
 
           <li className="nav-item">
             <Link to="#" className="nav-link" >
-              <i className="nav-icon fas fa-tachometer-alt" />
+            <FontAwesomeIcon icon={faCity} />&nbsp; &nbsp;
               <p>
                 OPERACIONES
                 <i className="right fas fa-angle-left" />
@@ -69,7 +75,7 @@ const Menu = () => {
 
           <li className="nav-item">
             <Link to="#" className="nav-link" >
-              <i className="nav-icon fas fa-tachometer-alt" />
+            <FontAwesomeIcon icon={faBusinessTime} />&nbsp; &nbsp;
               <p>
                 FACTURACIÓN
                 <i className="right fas fa-angle-left" />
@@ -100,7 +106,7 @@ const Menu = () => {
 
           <li className="nav-item">
             <Link to="#" className="nav-link" >
-              <i className="nav-icon fas fa-tachometer-alt" />
+            <FontAwesomeIcon icon={faWallet}/>&nbsp; &nbsp;
               <p>
                 GESTIÓN
                 <i className="right fas fa-angle-left" />

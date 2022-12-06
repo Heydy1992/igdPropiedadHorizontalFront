@@ -78,7 +78,7 @@ const CreateBuilding = () => {
             "idCauseTo": parseInt(building.causeTo),
             "idDestination":parseInt(building.destination),
             "idState": parseInt(building.state),
-            "idLessee": 1,
+            "idLessee": 29,
             "idUser": 8,
             "idCoefficient": parseInt(building.coefficient),
             "number": building.number,
@@ -107,7 +107,7 @@ const CreateBuilding = () => {
         const response = await APIInvoke.invokePOST(`/api/Building`, data)
             let msg = "";
             let icon = "";
-          
+            console.log(data)
             if(response.succeeded){
                 navigate("/listBuilding");
                 msg = "Registro creado exitosamente";

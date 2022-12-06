@@ -5,6 +5,9 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+
 
 
 const ListNews = () => {
@@ -42,7 +45,7 @@ const ListNews = () => {
         <section className="content">
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title"><Link to={"/createNews"}className="btn btn-block btn-primary btn-sm">Crear una novedad</Link></h3>
+              <h3 className="card-title"><Link to={"/createNews"}className="btn btn-block btn-danger btn-sm">Crear una novedad</Link></h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -80,10 +83,10 @@ const ListNews = () => {
                             
                             <td>{item.concept}</td>
                             <td>{item.building}</td>
-                            <td>{item.expirationDate}</td>
                             <td>{item.expirationDate.substr(0,10)}</td>
+                            <td>{item.value}</td>
                             <td>
-                              <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-primary" >Editar</Link>&nbsp;
+                            <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
                              
                             </td>
                           </tr>

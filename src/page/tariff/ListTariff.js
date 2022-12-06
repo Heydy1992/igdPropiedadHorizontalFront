@@ -5,6 +5,9 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+
 
 
 const ListTariff= () => {
@@ -33,16 +36,16 @@ const ListTariff= () => {
       <NavBar />
       <SidebarContainer />
       <div className="content-wrapper">
-        <ContentHeader
-          title={"Listado de Tarifas"}
-          breadCrumb1={"Inicio"}
-          breadCrumb2={"Tarifas"}
-          route={"#"}
-        />
+      <ContentHeader
+         
+         breadCrumb1={"Inicio"}
+         breadCrumb2={"Tarifas"}
+         route={"#"}
+       />
         <section className="content">
-          <div className="card">
+          <div className="card card-danger">
             <div className="card-header">
-              <h3 className="card-title"><Link to={"/createTariff"}className="btn btn-block btn-primary btn-sm">Crear tarifas</Link></h3>
+            <h3 className="card-title">Listado de tarifas</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -55,6 +58,18 @@ const ListTariff= () => {
               </div>
             </div>
             <div className="card-body">
+
+            <div className="row">
+                <div className=" col-sm-2">
+                  <Link to={"/createTariff"}className="btn btn-block btn-danger btn-sm">Crear tarifas</Link>
+                </div>
+              
+            </div>
+
+            <div className="row">
+              &nbsp;
+            </div>
+
               <div className="card">
                 <table
                   id="listTariff"
@@ -81,7 +96,7 @@ const ListTariff= () => {
                             <td>{item.value}</td>
                             <td>{item.expirationDate.substr(0,10)}</td>
                             <td>
-                              <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-primary" >Editar</Link>&nbsp;
+                            <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
                              
                             </td>
                           </tr>
