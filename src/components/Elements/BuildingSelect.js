@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import APIInvoke from "../../utils/APIInvoke";
-import Select from 'react-select'
 
 const BuildingSelect= ({ handleChange }) => {
   const [building, setBuilding] = useState([]);

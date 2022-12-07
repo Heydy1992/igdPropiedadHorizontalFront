@@ -96,7 +96,7 @@ const ListUsr = () => {
                             <td>{item.person.document}</td>
                             <td>{`${item.person.firstName} ${item.person.middleName} ${item.person.firstLastName} ${item.person.secondLastName}`}</td>
                             <td>{item.userName}</td>
-                            <td>{item.person.role}</td>
+                            <td>{item.role}</td>
                             <td>
                               <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
                              
