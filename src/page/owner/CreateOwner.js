@@ -69,16 +69,16 @@ const CreateOwner = () => {
           "firstLastName": person.firstLastName,
           "secondLastName":person.secondLastName,
           "document": person.document,
-          "department":person.department,
-          "city":person.city,
-          "Gender": parseInt(person.gender),
+          "department":parseInt(person.department),
+          "city":parseInt(person.city),
+          "gender": parseInt(person.gender),
           "role": parseInt(person.role),
           "documentType": parseInt(person.documentType),
           "dataContact": {
             "email": person.email,
             "phone":person.phone,
-            "address": person.address,
-            "typePhone":1
+            "typePhone":1,
+            "address": person.address
           }
         }
         
@@ -90,7 +90,9 @@ const CreateOwner = () => {
     const response = await APIInvoke.invokePOST(`/api/Persons`, data)
     let msg = "";
     let icon = "";
+    
     if(response.succeeded){
+      
       navigate("/listOwner");
       msg = "Registro creado exitosamente";
       icon="success";
@@ -111,7 +113,15 @@ const CreateOwner = () => {
       });
       
     }else{
-      msg="Por favor verificar los datos ingresados";
+      switch (response.errors[0]) {
+        case "The document already exists!":
+          msg="El Documento de identidad ya existe"
+          break;
+      
+        default:
+          break;
+      }
+      
       icon="error";
     }  
     Swal.fire({
@@ -129,6 +139,7 @@ const CreateOwner = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     createOwner();
     
   }
@@ -260,7 +271,7 @@ const CreateOwner = () => {
                     />
                   </div>
                   
-                   <DepartamentAndCity departament = {department} city={city} handleChange={handleChange}/>
+                   <DepartamentAndCity department = {department} city={city} handleChange={handleChange}/>
                   
                   
                   <div className="col-sm-4">

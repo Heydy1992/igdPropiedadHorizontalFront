@@ -81,7 +81,7 @@ const ListOwner = () => {
                     <tr>
                       <th>Documento</th>
                       <th>Propetario</th>
-                      <th>Inmueble</th>
+                      
                       <th>Opciones</th>
                      
                     </tr>
@@ -94,7 +94,7 @@ const ListOwner = () => {
                             
                             <td>{item.document}</td>
                             <td>{`${item.firstName} ${item.middleName} ${item.firstLastName} ${item.secondLastName}`}</td>
-                            <td></td>
+                            
                             <td>
                             <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
                              

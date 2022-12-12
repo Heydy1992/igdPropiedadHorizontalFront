@@ -122,7 +122,14 @@ const CreateUsr = () => {
       });
       
     }else{
-      msg="Por favor verificar los datos ingresados";
+      switch (response.errors[0]) {
+        case "The document already exists!":
+          msg="El Documento de identidad ya existe"
+          break;
+      
+        default:
+          break;
+      }
       icon="error";
     }  
     Swal.fire({
@@ -215,7 +222,7 @@ const CreateUsr = () => {
                       >
                         <option >Selecciona tipo de usuario</option>
                         <option value={1}>Administrador</option>
-                        <option value={2}>Propetario</option>
+                        <option value={2}>Usuario</option>
                         
                       </select>
                     </div>
