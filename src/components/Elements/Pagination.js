@@ -1,26 +1,23 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
 const Pagination = (props) => {
     //Inicializacion de componente
-    const {cunrrentPage, maxPageLimit, MinPageLimit } = props;
-    const totalPages = props.response.totalpages-1
+    const { totalRecords = null, pageLimit = 30, pageNeighbours = 0 } = props;
 
-    const pages = [];
+    pageLimit = typeof pageLimit === 'number' ? pageLimit : 30;
+    totalRecords = typeof totalRecords ==='number' ? totalRecords : 0;
+
+    pageNeighbours = typeof pageNeighbours === 'number' 
+        ?Math.max(0, Math.min(pageNeighbours, 2))
+        :0
+        
 
     
-    for(let i=1; i<=totalPages; i ++){
-        pages.push(i);
-    }
 
-
-    return (
-        <div>
-
-
-        </div>
-    );
-
+    
+ 
 
 };
 
