@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ContentHeader from "../../components/home/ContentHeader";
 import Footer from "../../components/home/Footer";
@@ -6,18 +6,24 @@ import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import DataTable from 'react-data-table-component';   
+import { faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import  DataTable from 'react-data-table-component';   
+import SearchFilter from "../../components/Elements/SearchFilter";
 
-const INITIAL_PAGE = 0; 
+
 
 const ListTariff = () => {
   const [tariff, setTariff] = useState([]);
+  const [search, setSearch] = useState("");
+ 
+
   
+
+
   //Listar propetarios
   const listTariff = async () => {
     const response = await APIInvoke.invokeGET(
-      "/api/Invoices/tariffs?page=1&pageSize=10"
+      "/api/Invoices/tariffs"
     );
     setTariff(response.items);
   };
@@ -25,6 +31,9 @@ const ListTariff = () => {
   useEffect(() => {
     listTariff();
   }, []);
+
+  //Filtro buscar
+  useEffect()
 
   const columns =[
     {
@@ -50,8 +59,8 @@ const ListTariff = () => {
     },
     {
       name: "Opciones",
-      selector:"concept",
-      sortable:true
+      cell: (row)  => <Link to={"#"} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>
+      
     },
   ] 
 
@@ -105,6 +114,12 @@ const ListTariff = () => {
                 columns={columns}
                 data={tariff}
                 pagination
+                subHeader
+                fixedHeader
+                fixedHeaderScrollHeight="400px"
+                subHeaderComponent={<input type="text" placeholder="Buscar..." className="w-25 form-control"/>}
+                value={search}
+                onChange={() => setSearch(e.target.value)}
                 paginationComponentOptions={paginationOptions}
                 />
               </div>
