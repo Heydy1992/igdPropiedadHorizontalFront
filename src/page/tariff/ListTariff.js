@@ -6,16 +6,16 @@ import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faSearch} from "@fortawesome/free-solid-svg-icons";
 import  DataTable from 'react-data-table-component';   
-import SearchFilter from "../../components/Elements/SearchFilter";
+
 
 
 
 const ListTariff = () => {
   const [tariff, setTariff] = useState([]);
   const [search, setSearch] = useState("");
- 
+  const [filteredTariff, setFilteredTariff] = useState([]);
 
   
 
@@ -26,6 +26,7 @@ const ListTariff = () => {
       "/api/Invoices/tariffs"
     );
     setTariff(response.items);
+    setFilteredTariff(response.items);
   };
 
   useEffect(() => {
@@ -33,11 +34,18 @@ const ListTariff = () => {
   }, []);
 
   //Filtro buscar
-  useEffect()
+  useEffect(()  => {
+    
+      const result = tariff.filter(tariff => {
+        return tariff.concept.toLowerCase().match(search.toLowerCase());
+    });
+    setFilteredTariff(result);
+ 
+  },[search]);
 
   const columns =[
     {
-      name: "Concepto",
+      name:"Concepto", 
       selector:"concept",
       sortable:true
     },
@@ -111,16 +119,33 @@ const ListTariff = () => {
 
               <div className="card">
                 <DataTable
-                columns={columns}
-                data={tariff}
-                pagination
-                subHeader
-                fixedHeader
-                fixedHeaderScrollHeight="400px"
-                subHeaderComponent={<input type="text" placeholder="Buscar..." className="w-25 form-control"/>}
-                value={search}
-                onChange={() => setSearch(e.target.value)}
-                paginationComponentOptions={paginationOptions}
+                  columns={columns}
+                  data={filteredTariff}
+                  pagination
+                  fixedHeader
+                  fixedHeaderScrollHeight="400px"
+                  paginationComponentOptions={paginationOptions}
+                  subHeader
+                  subHeaderComponent={
+                    <div className="input-group row" >
+                      <div className="col-3"></div>
+                      <div className="col-3"></div>
+                      <input 
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="form-control col-4"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                      <div className="input-group-append">
+                        <div className="input-group-text">
+                          <FontAwesomeIcon icon={faSearch} />
+                        </div>
+                      </div>
+                    </div>  
+                  }
+                  subHeaderAlign='right'
+                  
                 />
               </div>
               
