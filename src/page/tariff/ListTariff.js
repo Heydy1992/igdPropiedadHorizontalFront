@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect} from "react";
+
 import { Link } from "react-router-dom";
 import ContentHeader from "../../components/home/ContentHeader";
 import Footer from "../../components/home/Footer";
@@ -8,7 +9,8 @@ import APIInvoke from "../../utils/APIInvoke";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faSearch} from "@fortawesome/free-solid-svg-icons";
 import  DataTable from 'react-data-table-component';   
-
+import 'styled-components';
+import '../../css/dataTable.css';
 
 
 
@@ -43,6 +45,8 @@ const ListTariff = () => {
  
   },[search]);
 
+
+  //Columnas configuracion para el dataTable
   const columns =[
     {
       name:"Concepto", 
@@ -66,12 +70,23 @@ const ListTariff = () => {
       sortable:true
     },
     {
-      name: "Opciones",
+      name: "Editar",
+      cell: (row)  => {
+        <Link to={"#"} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>
+        
+      }
+      
+    },
+
+    {
+      name: "Anular",
       cell: (row)  => <Link to={"#"} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>
       
     },
   ] 
 
+  
+  //Configuracion  de paginación
   const paginationOptions = {
     rowsPerPageText: "Filas por pagina",
     rangeSeparatorText:"de",
@@ -105,7 +120,7 @@ const ListTariff = () => {
             </div>
             <div className="card-body">
               <div className="row">
-                <div className=" col-sm-2">
+              <div className=" col-sm-2">
                   <Link
                     to={"/createTariff"}
                     className="btn btn-block btn-danger btn-sm"
@@ -113,11 +128,17 @@ const ListTariff = () => {
                     Crear tarifas
                   </Link>
                 </div>
+              
               </div>
 
-              <div className="row">&nbsp;</div>
+              <div className="row">
+               &nbsp;
+              </div>
 
               <div className="card">
+                
+                
+         
                 <DataTable
                   columns={columns}
                   data={filteredTariff}
@@ -125,28 +146,26 @@ const ListTariff = () => {
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
+                 
                   subHeader
                   subHeaderComponent={
-                    <div className="input-group row" >
-                      <div className="col-3"></div>
-                      <div className="col-3"></div>
+                    <div class="form-group col-4">
+                      
                       <input 
                         type="text" 
                         placeholder="Buscar..." 
-                        className="form-control col-4"
+                        className="form-control"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                       />
-                      <div className="input-group-append">
-                        <div className="input-group-text">
-                          <FontAwesomeIcon icon={faSearch} />
-                        </div>
-                      </div>
-                    </div>  
-                  }
+                    </div>
+                   
+                  }    
+                     
                   subHeaderAlign='right'
                   
                 />
+              
               </div>
               
 
