@@ -32,7 +32,7 @@ const ListBuilding = () => {
 
   //Anular propietarios
   const deleteBuilding = async (id) => {
-    const response = await APIInvoke.invokePOST(`api/Building/state`, id);
+    const response = await APIInvoke.invokePOST(`/api/Building/state`, id);
 
     let msg ="";
     let icon = "";
@@ -97,6 +97,7 @@ const ListBuilding = () => {
    
     {
       name: "Opciones",
+      button:true,
       cell: (row)  => 
         (
         <>
@@ -116,13 +117,13 @@ const ListBuilding = () => {
           </Link>
 
           &nbsp;
-          <Link 
+          <button
             to={"#"} 
             className="btn btn-sm btn-danger" 
-            onClick={deleteBuilding(row.id)}
+           
           >
             <FontAwesomeIcon icon={faTrash} />
-          </Link>
+          </button>
 
           
         </>

@@ -39,7 +39,7 @@ const ListBuilding = () => {
       return commonArea.name.toLowerCase().match(search.toLowerCase())
     })
     setFilteredCommonArea(result)
-  }, [search])
+  },[search])
 
   //Columnas configuracion para el dataTable
   const columns = [
