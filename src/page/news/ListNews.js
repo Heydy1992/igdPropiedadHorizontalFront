@@ -5,19 +5,24 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
+import  DataTable from 'react-data-table-component';   
+import 'styled-components';
+import '../../css/dataTable.css';
 
 
 const ListNews = () => {
 
   const [news, setNews] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredNews, setFilteredNews] = useState([]);
 
   //Listar propetarios
   const listNews = async () => {
-    const response = await APIInvoke.invokeGET('/api/Invoices/news?page=1&pageSize=10');
+    const response = await APIInvoke.invokeGET('/api/Invoices/news');
     setNews(response.items);
+    setFilteredNews(response.items);
     
     
 
@@ -28,8 +33,86 @@ const ListNews = () => {
     
   },[]);
 
-  //Paginacion
-  
+  //Filtro para buscar
+ 
+  useEffect(()  => {
+    
+    const result = news.filter(news => {
+      return news.concept.toLowerCase().match(search.toLowerCase());
+    });
+    setFilteredNews(result);
+
+  },[search]);
+
+  //Columnas configuracion para el dataTable
+  const columns =[
+    {
+      name:"Concepto", 
+      selector: row => row.concept,
+      sortable:true
+    },
+
+    {
+      name: "Inmueble",
+      selector:row => row.building,
+      sortable:true
+    },
+    {
+      name: "Valor",
+      selector:  (row) =>  row.value,
+      sortable:true
+    },
+    {
+      name: "Fecha de expiración",
+      selector:row => row.expirationDate.substr(0,10),
+      sortable:true
+    },
+    
+    {
+      name: "Opciones",
+      cell: (row)  => 
+        (
+        <>
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-info" 
+          >
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+          
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-primary" 
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </Link>
+
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-danger" 
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Link>
+        </>
+       
+        
+        
+        )
+      
+    },
+
+    
+  ] 
+
+    //Configuracion  de paginación
+    const paginationOptions = {
+      rowsPerPageText: "Filas por pagina",
+      rangeSeparatorText:"de",
+      selecetAllNowsItem:true,
+      selectAllNowsItemText: "Todos",
+    }
 
   return (
     <div className="wrapper">
@@ -61,7 +144,10 @@ const ListNews = () => {
 
             <div className="row">
                 <div className=" col-sm-2">
-                  <Link to={"/createNews"}className="btn btn-block btn-danger btn-sm">Crear Novedades</Link>
+                  <Link to={"/createNews"}className="btn btn-block btn-danger btn-sm">
+                    Crear Novedades &nbsp;
+                    <FontAwesomeIcon icon={faSave} />
+                  </Link>
                 </div>
               
             </div>
@@ -70,42 +156,32 @@ const ListNews = () => {
               &nbsp;
             </div>
               <div className="card">
-                <table
-                  id="listNews"
-                  className="table table-bordered table-hover"
-                >
-                  <thead>
-                    <tr>
-                      <th>Concepto</th>
-                      <th>Inmueble</th>
+              <DataTable
+                  columns={columns}
+                  data={filteredNews}
+                  pagination
+                  fixedHeader
+                  fixedHeaderScrollHeight="400px"
+                  paginationComponentOptions={paginationOptions}
+                 
+                  subHeader
+                  subHeaderComponent={
+                    <div className="form-group col-4">
                       
-                      <th>Fecha de vencimiento</th>
-                      <th>Valor</th>
-                      <th>Opciones</th>
-                      
+                      <input 
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="form-control"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                   
+                  }    
                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      news.map(
-                        item => 
-                          <tr key={item.id}>
-                            
-                            <td>{item.concept}</td>
-                            <td>{item.building}</td>
-                            <td>{item.expirationDate.substr(0,10)}</td>
-                            <td>{item.value}</td>
-                            <td>
-                            <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
-                             
-                            </td>
-                          </tr>
-                      )  
-                    }
-                  </tbody>
+                  subHeaderAlign='right'
                   
-                </table>
+                />
               </div>
             </div>
           </div>

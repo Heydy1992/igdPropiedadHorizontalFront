@@ -5,18 +5,25 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
+import  DataTable from 'react-data-table-component';   
+import 'styled-components';
+import '../../css/dataTable.css';
+
 
 
 const ListUsr = () => {
 
   const [user, setUser ] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredUser, setFilteredUser] = useState([]);
 
   //Listar propetarios
   const listUser = async () => {
     const response = await APIInvoke.invokeGET('/api/Administrator');
     setUser(response.items);
+    setFilteredUser(response.items);
     
     
 
@@ -27,7 +34,92 @@ const ListUsr = () => {
     
   },[]);
 
-  //Paginacion
+  //Filtro para buscar
+ 
+  useEffect(()  => {
+    
+    const result = user.filter(user => {
+      return user.person.firstName.toLowerCase().match(search.toLowerCase()) 
+            || user.person.middleName.toLowerCase().match(search.toLowerCase())
+            || user.person.firstLastName.toLowerCase().match(search.toLowerCase())
+            || user.person.secondLastName.toLowerCase().match(search.toLowerCase())
+            || user.person.document.toLowerCase().match(search.toLowerCase())
+            || user.userName.toLowerCase().match(search.toLowerCase());
+    });
+    setFilteredUser(result);
+
+  },[search]);
+
+  //Columnas configuracion para el dataTable
+  const columns =[
+    {
+      name:"Documento", 
+      selector: row => row.person.document,
+      sortable:true
+    },
+
+    {
+      name: "Nombre de usuario",
+      selector:row => row.userName,
+      sortable:true
+    },
+    {
+      name: "Usuario",
+    selector:  (row) => `${row.person.firstName} ${row.person.middleName} ${row.person.firstLastName} ${row.person.secondLastName}`,
+      sortable:true
+    },
+    {
+      name: "Rol",
+      selector:row => row.role,
+      sortable:true
+    },
+    
+    {
+      name: "Opciones",
+      cell: (row)  => 
+        (
+        <>
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-info" 
+          >
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+          
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-primary" 
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </Link>
+
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-danger" 
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Link>
+        </>
+       
+        
+        
+        )
+      
+    },
+
+    
+  ] 
+
+   //Configuracion  de paginación
+   const paginationOptions = {
+    rowsPerPageText: "Filas por pagina",
+    rangeSeparatorText:"de",
+    selecetAllNowsItem:true,
+    selectAllNowsItemText: "Todos",
+  }
+
   
 
   return (
@@ -63,7 +155,13 @@ const ListUsr = () => {
            
             <div className="row">
                 <div className=" col-sm-2">
-                  <Link to={"/createUsr"}className="btn btn-block btn-danger btn-sm">Crear Usuarios</Link>
+                  <Link 
+                    to={"/createUsr"}
+                    className="btn btn-block btn-danger btn-sm"
+                  >
+                    Crear Usuarios &nbsp;
+                    <FontAwesomeIcon icon={faSave} />
+                  </Link>
                 </div>
               
             </div>
@@ -73,40 +171,32 @@ const ListUsr = () => {
             </div>
               
             <div className="card">  
-                <table
-                  id="listUser"
-                  className="table  table-hover"
-                >
-                  <thead >
-                    <tr>
-                      <th>Documento</th>
-                      <th>Nombre Usuario</th>
-                      <th>Usuario</th>
-                      <th>ROL</th>
-                      <th>Opciones</th>
+            <DataTable
+                  columns={columns}
+                  data={filteredUser}
+                  pagination
+                  fixedHeader
+                  fixedHeaderScrollHeight="400px"
+                  paginationComponentOptions={paginationOptions}
+                 
+                  subHeader
+                  subHeaderComponent={
+                    <div className="form-group col-4">
+                      
+                      <input 
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="form-control"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                   
+                  }    
                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      user.map(
-                        item => 
-                          <tr key={item.id}>
-                            
-                            <td>{item.person.document}</td>
-                            <td>{`${item.person.firstName} ${item.person.middleName} ${item.person.firstLastName} ${item.person.secondLastName}`}</td>
-                            <td>{item.userName}</td>
-                            <td>{item.role}</td>
-                            <td>
-                              <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
-                             
-                            </td>
-                          </tr>
-                      )  
-                    }
-                  </tbody>
+                  subHeaderAlign='right'
                   
-                </table>
+                />
               </div>
             </div>
           </div>

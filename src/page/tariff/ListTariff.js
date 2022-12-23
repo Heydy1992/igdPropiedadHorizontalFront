@@ -7,7 +7,7 @@ import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faSearch} from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
@@ -50,39 +50,62 @@ const ListTariff = () => {
   const columns =[
     {
       name:"Concepto", 
-      selector:"concept",
+      selector: row => row.concept,
       sortable:true
     },
 
     {
       name: "Coeficiente",
-      selector:"coefficient",
+      selector:row => row.coefficient,
       sortable:true
     },
     {
       name: "Valor",
-      selector:"value",
+      selector:row => row.value,
       sortable:true
     },
     {
       name: "Fecha de expiración",
-      selector:"expirationDate",
+      selector:row => row.expirationDate.substr(0,10),
       sortable:true
     },
+    
     {
-      name: "Editar",
-      cell: (row)  => {
-        <Link to={"#"} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>
+      name: "Opciones",
+      cell: (row)  => 
+        (
+        <>
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-info" 
+          >
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+          
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-primary" 
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </Link>
+
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-danger" 
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Link>
+        </>
+       
         
-      }
+        
+        )
       
     },
 
-    {
-      name: "Anular",
-      cell: (row)  => <Link to={"#"} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>
-      
-    },
+    
   ] 
 
   
@@ -125,7 +148,8 @@ const ListTariff = () => {
                     to={"/createTariff"}
                     className="btn btn-block btn-danger btn-sm"
                   >
-                    Crear tarifas
+                    Crear tarifas &nbsp;
+                    <FontAwesomeIcon icon={faSave} />
                   </Link>
                 </div>
               
@@ -149,7 +173,7 @@ const ListTariff = () => {
                  
                   subHeader
                   subHeaderComponent={
-                    <div class="form-group col-4">
+                    <div className="form-group col-4">
                       
                       <input 
                         type="text" 

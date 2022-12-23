@@ -5,19 +5,25 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
+import  DataTable from 'react-data-table-component';   
+import 'styled-components';
+import '../../css/dataTable.css';
 
 
 
 const ListOwner = () => {
 
   const [owner, setOwner ] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredOwner, setFilteredOwner] = useState([]);
 
   //Listar propetarios
   const listOwner = async () => {
-    const response = await APIInvoke.invokeGET('/api/Administrator/owner?page=1&pageSize=10');
+    const response = await APIInvoke.invokeGET('/api/Administrator/owner');
     setOwner(response.items);
+    setFilteredOwner(response.items);
     
     
 
@@ -28,8 +34,82 @@ const ListOwner = () => {
     
   },[]);
 
-  //Paginacion
+  //Filtro para buscar
+ 
+  useEffect(()  => {
+    
+    const result = owner.filter(owner => {
+      return owner.firstName.toLowerCase().match(search.toLowerCase()) 
+            || owner.middleName.toLowerCase().match(search.toLowerCase())
+            || owner.firstLastName.toLowerCase().match(search.toLowerCase())
+            || owner.secondLastName.toLowerCase().match(search.toLowerCase())
+            || owner.document.toLowerCase().match(search.toLowerCase());
+    });
+    setFilteredOwner(result);
+
+  },[search]);
   
+
+  //Columnas configuracion para el dataTable
+  const columns =[
+    {
+      name:"Documento", 
+      selector: row => row.document,
+      sortable:true
+    },
+
+    {
+      name: "Nombre propetario",
+      selector:row => `${row.firstName} ${row.middleName} ${row.firstLastName} ${row.secondLastName}` ,
+      sortable:true
+    },
+    
+    
+    {
+      name: "Opciones",
+      cell: (row)  => 
+        (
+        <>
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-info" 
+          >
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+          
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-primary" 
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </Link>
+
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-danger" 
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Link>
+        </>
+       
+        
+        
+        )
+      
+    },
+
+    
+  ] 
+
+      //Configuracion  de paginación
+      const paginationOptions = {
+        rowsPerPageText: "Filas por pagina",
+        rangeSeparatorText:"de",
+        selecetAllNowsItem:true,
+        selectAllNowsItemText: "Todos",
+      }
 
   return (
     <div className="wrapper">
@@ -61,7 +141,10 @@ const ListOwner = () => {
 
             <div className="row">
                 <div className=" col-sm-2">
-                  <Link to={"/createOwner"}className="btn btn-block btn-danger btn-sm">Crear propetarios</Link>
+                  <Link to={"/createOwner"}className="btn btn-block btn-danger btn-sm">
+                  Crear propetarios &nbsp;
+                    <FontAwesomeIcon icon={faSave} />
+                  </Link>
                 </div>
               
             </div>
@@ -73,38 +156,32 @@ const ListOwner = () => {
 
            
               <div className="card">
-                <table
-                  id="listOwner"
-                  className="table table-bordered table-hover"
-                >
-                  <thead>
-                    <tr>
-                      <th>Documento</th>
-                      <th>Propetario</th>
+              <DataTable
+                  columns={columns}
+                  data={filteredOwner}
+                  pagination
+                  fixedHeader
+                  fixedHeaderScrollHeight="400px"
+                  paginationComponentOptions={paginationOptions}
+                 
+                  subHeader
+                  subHeaderComponent={
+                    <div className="form-group col-4">
                       
-                      <th>Opciones</th>
+                      <input 
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="form-control"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                   
+                  }    
                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      owner.map(
-                        item => 
-                          <tr key={item.id}>
-                            
-                            <td>{item.document}</td>
-                            <td>{`${item.firstName} ${item.middleName} ${item.firstLastName} ${item.secondLastName}`}</td>
-                            
-                            <td>
-                            <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
-                             
-                            </td>
-                          </tr>
-                      )  
-                    }
-                  </tbody>
+                  subHeaderAlign='right'
                   
-                </table>
+                />
               </div>
             </div>
           </div>

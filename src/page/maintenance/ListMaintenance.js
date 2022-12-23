@@ -5,19 +5,25 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
+import  DataTable from 'react-data-table-component';   
+import 'styled-components';
+import '../../css/dataTable.css';
 
 
 
 const ListMaintenance = () => {
 
   const [maintenance, setMaintenance] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredMaintenance, setFilteredMaintenance] = useState([]);
 
   //Listar propetarios
   const listMaintenance = async () => {
     const response = await APIInvoke.invokeGET('/api/Maintenances?page=1&pageSize=10');
     setMaintenance(response.items);
+    setFilteredMaintenance(response.items);
     
     
 
@@ -27,10 +33,87 @@ const ListMaintenance = () => {
     listMaintenance();
     
   },[]);
+//Filtro para buscar
+  useEffect(()  => {
+    
+    const result = maintenance.filter(maintenance => {
+      return maintenance.maintenanceActive.toLowerCase().match(search.toLowerCase())
+            || maintenance.period.toLowerCase().match(search.toLowerCase())
+            || maintenance.responsible.toLowerCase().match(search.toLowerCase());
+    });
+    setFilteredMaintenance(result);
 
-  //Paginacion
+  },[search]);
   
+//Columnas configuracion para el dataTable
+const columns =[
+  {
+    name:"Nombre", 
+    selector: row => row.maintenanceActive,
+    sortable:true
+  },
 
+  {
+    name: "Periocidad",
+    selector:row => row.period,
+    sortable:true
+  },
+  {
+    name: "Encargado",
+    selector:  (row) =>  row.responsible,
+    sortable:true
+  },
+  {
+    name: "Estado",
+    selector:row => row.maintenanceState,
+    sortable:true
+  },
+  
+  {
+    name: "Opciones",
+    cell: (row)  => 
+      (
+      <>
+        <Link 
+          to={"#"} 
+          className="btn btn-sm btn-info" 
+        >
+          <FontAwesomeIcon icon={faPenToSquare} />
+        </Link>
+        
+        &nbsp;
+        <Link 
+          to={"#"} 
+          className="btn btn-sm btn-primary" 
+        >
+          <FontAwesomeIcon icon={faPrint} />
+        </Link>
+
+        &nbsp;
+        <Link 
+          to={"#"} 
+          className="btn btn-sm btn-danger" 
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </Link>
+      </>
+     
+      
+      
+      )
+    
+  },
+
+  
+] 
+
+  //Configuracion  de paginación
+  const paginationOptions = {
+    rowsPerPageText: "Filas por pagina",
+    rangeSeparatorText:"de",
+    selecetAllNowsItem:true,
+    selectAllNowsItemText: "Todos",
+  }
   return (
     <div className="wrapper">
       <NavBar />
@@ -60,8 +143,11 @@ const ListMaintenance = () => {
             <div className="card-body">
 
             <div className="row">
-                <div className=" col-sm-2">
-                  <Link to={"/createMaintenance"}className="btn btn-block btn-danger btn-sm">Crear Mantenimientos</Link>
+                <div className=" col-sm-4">
+                  <Link to={"/createMaintenance"}className="btn btn-block btn-danger ">
+                    Crear Mantenimientos &nbsp;
+                    <FontAwesomeIcon icon={faSave} />
+                    </Link>
                 </div>
               
             </div>
@@ -70,46 +156,32 @@ const ListMaintenance = () => {
               &nbsp;
             </div>
               <div className="card">
-                <table
-                  id="listNews"
-                  className="table table-bordered table-hover"
-                >
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Tipo de periocidad</th>
-                      <th>Fecha de inicio</th>
-                      <th>Cantidad de tiempo</th>
-                      <th>Encargado</th>
-                      <th>Estado</th>
-                      <th>Costo</th>
-                      <th>Opciones</th>
+              <DataTable
+                  columns={columns}
+                  data={filteredMaintenance}
+                  pagination
+                  fixedHeader
+                  fixedHeaderScrollHeight="400px"
+                  paginationComponentOptions={paginationOptions}
+                 
+                  subHeader
+                  subHeaderComponent={
+                    <div className="form-group col-4">
+                      
+                      <input 
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="form-control"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                   
+                  }    
                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      maintenance.map(
-                        item => 
-                          <tr key={item.id}>
-                            
-                            <td>{item.maintenanceActive}</td>
-                            <td>{item.period}</td>
-                            <td>{item.initialDate.substr(0,10)}</td>
-                            <td>{item.quantity}</td>
-                            <td>{item.responsible}</td>
-                            <td>{item.state && "Activo"}</td>
-                            <td>{item.cost}</td>
-                            <td>
-                            <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
-                             
-                            </td>
-                          </tr>
-                      )  
-                    }
-                  </tbody>
+                  subHeaderAlign='right'
                   
-                </table>
+                />
               </div>
             </div>
           </div>

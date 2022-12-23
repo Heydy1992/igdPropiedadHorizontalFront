@@ -5,19 +5,26 @@ import Footer from "../../components/home/Footer";
 import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
+import  DataTable from 'react-data-table-component';   
+import 'styled-components';
+import '../../css/dataTable.css';
 
 
 const ListBuilding = () => {
 
   const [building, setBuilding] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredBuilding, setFilteredBuilding] = useState([]);
+
+
 
   //Listar propetarios
   const listBuilding = async () => {
     const response = await APIInvoke.invokeGET('/api/Building?page=1&pageSize=10');
     setBuilding(response.items);
-    
+    setFilteredBuilding(response.items);    
     
 
   };
@@ -27,8 +34,85 @@ const ListBuilding = () => {
     
   },[]);
 
-  //Paginacion
+  //Filtro para buscar
+ 
+  useEffect(()  => {
+    
+    const result = building.filter(building => {
+      return building.owner.toLowerCase().match(search.toLowerCase()) 
+            || building.codeBuilding.toLowerCase().match(search.toLowerCase()) 
+            || building.type.toLowerCase().match(search.toLowerCase())
+      });
+    setFilteredBuilding(result);
+
+  },[search]);
   
+
+  //Columnas configuracion para el dataTable
+  const columns =[
+    {
+    name:"Nombre Inmueble", 
+      selector: row => row.codeBuilding,
+      sortable:true
+    },
+
+    {
+      name: "Propietario",
+      selector:row => row.owner,
+      sortable:true
+    },
+    {
+      name: "Tipo de inmueble",
+      selector:  (row) =>  row.type,
+      sortable:true
+    },
+   
+    {
+      name: "Opciones",
+      cell: (row)  => 
+        (
+        <>
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-info" 
+          >
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </Link>
+          
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-primary" 
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </Link>
+
+          &nbsp;
+          <Link 
+            to={"#"} 
+            className="btn btn-sm btn-danger" 
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Link>
+        </>
+       
+        
+        
+        )
+      
+    },
+
+    
+  ] 
+
+    //Configuracion  de paginación
+    const paginationOptions = {
+      rowsPerPageText: "Filas por pagina",
+      rangeSeparatorText:"de",
+      selecetAllNowsItem:true,
+      selectAllNowsItemText: "Todos",
+    }
+
 
   return (
     <div className="wrapper">
@@ -61,7 +145,10 @@ const ListBuilding = () => {
               
             <div className="row">
                 <div className=" col-sm-2">
-                  <Link to={"/createBuilding"}className="btn btn-block btn-danger btn-sm">Crear Propiedades</Link>
+                  <Link to={"/createBuilding"}className="btn btn-block btn-danger btn-sm">
+                    Crear Propiedades &nbsp;
+                    <FontAwesomeIcon icon={faSave} />
+                  </Link>
                 </div>
               
             </div>
@@ -70,38 +157,32 @@ const ListBuilding = () => {
               &nbsp;
             </div>
               <div className="card">
-                <table
-                  id="listBuilding"
-                  className="table table-bordered table-hover"
-                >
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Propetario</th>
-                      <th>Tipo de inmueble</th>
-                      <th>Opciones</th>
+              <DataTable
+                  columns={columns}
+                  data={filteredBuilding}
+                  pagination
+                  fixedHeader
+                  fixedHeaderScrollHeight="400px"
+                  paginationComponentOptions={paginationOptions}
+                 
+                  subHeader
+                  subHeaderComponent={
+                    <div className="form-group col-4">
+                      
+                      <input 
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="form-control"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                   
+                  }    
                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      building.map(
-                        item => 
-                          <tr key={item.id}>
-                            
-                            <td>{item.codeBuilding}</td>
-                            <td>{item.owner}</td>
-                            <td>{item.type}</td>
-                            <td>
-                            <Link to={`/editUsr/${item.id}`} className="btn btn-sm btn-danger" ><FontAwesomeIcon icon={faPenToSquare} /></Link>&nbsp;
-                             
-                            </td>
-                          </tr>
-                      )  
-                    }
-                  </tbody>
+                  subHeaderAlign='right'
                   
-                </table>
+                />
               </div>
             </div>
           </div>
