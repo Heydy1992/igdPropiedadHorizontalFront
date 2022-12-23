@@ -107,7 +107,7 @@ const CreateBuilding = () => {
         const response = await APIInvoke.invokePOST(`/api/Building`, data)
             let msg = "";
             let icon = "";
-            console.log(data)
+            
             if(response.succeeded){
                 navigate("/listBuilding");
                 msg = "Registro creado exitosamente";

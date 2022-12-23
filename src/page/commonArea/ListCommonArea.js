@@ -113,7 +113,7 @@ const ListBuilding = () => {
                 <div className=" col-sm-2">
                   <Link
                     to={'/createCommonArea'}
-                    className="btn btn-block btn-danger btn-sm"
+                    className="btn btn-block btn-info btn-sm"
                   >
                     Crear Area comun &nbsp;
                     <FontAwesomeIcon icon={faSave} />

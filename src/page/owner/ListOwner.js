@@ -85,13 +85,7 @@ const ListOwner = () => {
             <FontAwesomeIcon icon={faPrint} />
           </Link>
 
-          &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-danger" 
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </Link>
+          
         </>
        
         
@@ -141,7 +135,7 @@ const ListOwner = () => {
 
             <div className="row">
                 <div className=" col-sm-2">
-                  <Link to={"/createOwner"}className="btn btn-block btn-danger btn-sm">
+                  <Link to={"/createOwner"}className="btn btn-block btn-info btn-sm">
                   Crear propetarios &nbsp;
                     <FontAwesomeIcon icon={faSave} />
                   </Link>

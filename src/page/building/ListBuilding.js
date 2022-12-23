@@ -10,6 +10,7 @@ import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
+import Swal from "sweetalert2";
 
 
 const ListBuilding = () => {
@@ -28,6 +29,33 @@ const ListBuilding = () => {
     
 
   };
+
+  //Anular propietarios
+  const deleteBuilding = async (id) => {
+    const response = await APIInvoke.invokePOST(`api/Building/state`, id);
+
+    let msg ="";
+    let icon = "";
+
+    if(response.succeeded){
+      msg="Registro anulado exitosamente!";
+      icon="success";
+
+    } else if (!response.succeeded && response.message==="Record not found" ){
+      msg="Este propetario no existe!";
+      icon="error";
+    }  
+    Swal.fire({
+      title: '',
+      text:msg,
+      icon:icon,
+      showConfirmButton:false,
+      showDenyButton: true,
+      denyButtonText: 'Aceptar',
+    });
+  }
+
+  
 
   useEffect(() => {
     listBuilding();
@@ -91,9 +119,12 @@ const ListBuilding = () => {
           <Link 
             to={"#"} 
             className="btn btn-sm btn-danger" 
+            onClick={deleteBuilding(row.id)}
           >
             <FontAwesomeIcon icon={faTrash} />
           </Link>
+
+          
         </>
        
         
@@ -145,7 +176,7 @@ const ListBuilding = () => {
               
             <div className="row">
                 <div className=" col-sm-2">
-                  <Link to={"/createBuilding"}className="btn btn-block btn-danger btn-sm">
+                  <Link to={"/createBuilding"}className="btn btn-block btn-info btn-sm">
                     Crear Propiedades &nbsp;
                     <FontAwesomeIcon icon={faSave} />
                   </Link>
