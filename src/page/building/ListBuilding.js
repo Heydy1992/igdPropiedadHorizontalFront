@@ -13,6 +13,7 @@ import '../../css/dataTable.css';
 import Swal from "sweetalert2";
 
 
+
 const ListBuilding = () => {
 
   const [building, setBuilding] = useState([]);
@@ -23,36 +24,47 @@ const ListBuilding = () => {
 
   //Listar propetarios
   const listBuilding = async () => {
-    const response = await APIInvoke.invokeGET('/api/Building?page=1&pageSize=10');
+    const response = await APIInvoke.invokeGET('/api/Building?page=2&pageSize=10');
     setBuilding(response.items);
-    setFilteredBuilding(response.items);    
-    
-
+    setFilteredBuilding(response.items);
   };
 
   //Anular propietarios
   const deleteBuilding = async (id) => {
-    const response = await APIInvoke.invokePOST(`/api/Building/state`, id);
-
-    let msg ="";
-    let icon = "";
-
-    if(response.succeeded){
-      msg="Registro anulado exitosamente!";
-      icon="success";
-
-    } else if (!response.succeeded && response.message==="Record not found" ){
-      msg="Este propetario no existe!";
-      icon="error";
-    }  
+    const data = [id]
     Swal.fire({
-      title: '',
-      text:msg,
-      icon:icon,
-      showConfirmButton:false,
-      showDenyButton: true,
-      denyButtonText: 'Aceptar',
-    });
+      title: '¿Estás seguro?',
+      text: "No podras revertir la anulación!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Anular!'
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        return APIInvoke.invokePOST(`/api/Building/state`,data);
+        
+        
+      }
+    }).then((response)=>{
+      
+        if(response.succeeded){
+          
+          Swal.fire(
+            'Anulación',
+            'El Inmueble ha sido anulado con exito!',
+            'success'
+          );
+          listBuilding();
+          
+          
+        }
+    }).catch((err) => {
+      err.succeeded =false
+    })
+    
+
+    
   }
 
   
@@ -79,11 +91,11 @@ const ListBuilding = () => {
   //Columnas configuracion para el dataTable
   const columns =[
     {
-    name:"Nombre Inmueble", 
+      name:"Nombre Inmueble", 
       selector: row => row.codeBuilding,
-      sortable:true
+      sortable:true,
     },
-
+   
     {
       name: "Propietario",
       selector:row => row.owner,
@@ -94,49 +106,65 @@ const ListBuilding = () => {
       selector:  (row) =>  row.type,
       sortable:true
     },
-   
     {
       name: "Opciones",
       button:true,
-      cell: (row)  => 
-        (
-        <>
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-info" 
-          >
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </Link>
-          
-          &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-primary" 
-          >
-            <FontAwesomeIcon icon={faPrint} />
-          </Link>
-
-          &nbsp;
-          <button
-            to={"#"} 
-            className="btn btn-sm btn-danger" 
-           
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
-
-          
-        </>
-       
-        
-        
-        )
       
-    },
+
+      cell: (row)  => 
+        (<>
+             <button 
+                to={"#"} 
+                className="btn btn-sm btn-info" 
+                disabled={!row.state && "disabled" }
+              >
+                <FontAwesomeIcon icon={faPenToSquare} />
+              </button>
+              
+              &nbsp;
+              <button
+                to={"#"} 
+                className="btn btn-sm btn-primary" 
+                disabled={!row.state && "disabled" }
+              >
+                <FontAwesomeIcon icon={faPrint} />
+              </button>
+    
+              &nbsp;
+              <button
+                
+                className="btn btn-sm btn-danger anular" 
+                onClick={() => {deleteBuilding(row.id)}}
+                disabled={!row.state && "disabled" }
+               
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+    
+        </>)
+    
+    }
+
+    
+
+    
 
     
   ] 
 
+  //filas condicionales
+
+  const conditionalRowStyles  = [
+    {
+      when: row => !row.state,
+      style:{
+        color: 'red'
+        
+      }
+      
+        
+    }
+  ]
     //Configuracion  de paginación
     const paginationOptions = {
       rowsPerPageText: "Filas por pagina",
@@ -196,7 +224,7 @@ const ListBuilding = () => {
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
-                 
+                  conditionalRowStyles={conditionalRowStyles}
                   subHeader
                   subHeaderComponent={
                     <div className="form-group col-4">
