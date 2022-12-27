@@ -6,7 +6,7 @@ import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPrint, faSave} from "@fortawesome/free-solid-svg-icons";
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
@@ -14,20 +14,53 @@ import Swal from "sweetalert2";
 
 
 
+
+
+
 const ListBuilding = () => {
 
   const [building, setBuilding] = useState([]);
+  const [buildingById, setBuildingById] = useState([]);
+  //filtros
   const [search, setSearch] = useState("");
   const [filteredBuilding, setFilteredBuilding] = useState([]);
+ //Paginación
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  
 
 
 
-  //Listar propetarios
-  const listBuilding = async () => {
-    const response = await APIInvoke.invokeGET('/api/Building?page=2&pageSize=10');
+  //Listar inmuebles
+  const listBuilding = async (page) => {
+    const response = await APIInvoke.invokeGET(`/api/Building?page=${page}&pageSize=${perPage}`);
     setBuilding(response.items);
+    setTotalRows(response.totalItems);
     setFilteredBuilding(response.items);
   };
+
+  //Consultar inmuebles por id
+  const handleBuildingById = (id) => {
+
+    const buildingId = building.filter(item => item.id === id);
+    setBuildingById(buildingId);
+    console.log(buildingById[0])
+   
+    
+  }
+//Paginacion
+  const handlePageChange = (page) => {
+    listBuilding(page);
+  
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET(`/api/Building?page=${page}&pageSize=${newPerPage}`);
+    
+    setBuilding(response.items);
+    setFilteredBuilding(response.items);
+    setPerPage(newPerPage);
+  }
 
   //Anular propietarios
   const deleteBuilding = async (id) => {
@@ -70,7 +103,7 @@ const ListBuilding = () => {
   
 
   useEffect(() => {
-    listBuilding();
+    listBuilding(1);
     
   },[]);
 
@@ -113,18 +146,16 @@ const ListBuilding = () => {
 
       cell: (row)  => 
         (<>
-             <button 
-                to={"#"} 
-                className="btn btn-sm btn-info" 
-                disabled={!row.state && "disabled" }
-              >
-                <FontAwesomeIcon icon={faPenToSquare} />
-              </button>
+        
+            
               
-              &nbsp;
+             
               <button
-                to={"#"} 
+                
                 className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleBuildingById(row.id)}}
                 disabled={!row.state && "disabled" }
               >
                 <FontAwesomeIcon icon={faPrint} />
@@ -221,6 +252,10 @@ const ListBuilding = () => {
                   columns={columns}
                   data={filteredBuilding}
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
@@ -249,7 +284,54 @@ const ListBuilding = () => {
         </section>
       </div>
       <Footer />
+                  {/*Ventana modal para imprimir infomración de un inmueble en particular */}
+      <div className="modal fade" id="modal-lg">
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Información de inmueble</h4>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              
+                      <label style={{fontSize:'17px'}}>Codigo Inmueble:</label>
+                      <label style={{fontSize: '12px'}}>{buildingById[0].codeBuilding}</label>
+                      <div></div>
+                      <label>Propetario:</label>
+                      <label style={{fontSize: '12px'}}>{buildingById[0].owner}</label>
+                      <div></div>
+                      <label>Tipo:</label>
+                      <label style={{fontSize: '12px'}}>{buildingById[0].type}</label>
+                      <div></div>
+                      <label>Destino:</label>
+                      <label style={{fontSize: '12px'}}>{buildingById[0].destination}</label>
+                      <div></div>
+                      <label>Estado:</label>
+                      <label style={{fontSize: '12px'}}>{buildingById[0].buildingState}</label>
+                      <div></div>
+                      <label>Zona:</label>
+                      <label style={{fontSize: '12px'}}>{buildingById[0].zone}</label>          
+                 
+             
+            </div>
+            <div className="modal-footer justify-content-between">
+              <button type="button" className="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              
+            </div>
+          </div>
+       
+        </div>
+     
+      </div>
+      
+      
     </div>
+
+    
+
+ 
   );
 };
 

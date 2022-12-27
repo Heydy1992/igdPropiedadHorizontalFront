@@ -8,7 +8,7 @@ import EditOwner from './page/owner/EditOwner';
 import CreateUsr from './page/auth/CreateUsr';
 import ListUsr from  './page/auth/ListUsr';
 import ListBuilding from './page/building/ListBuilding';
-import CreateBuilding from './page/building/createBuilding';
+import CreateBuilding from './page/building/CreateBuilding';
 import ListCommonArea from './page/commonArea/ListCommonArea';
 import CreateCommonArea from './page/commonArea/CreateCommonArea';
 import ListTariff from './page/tariff/ListTariff';
