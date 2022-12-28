@@ -461,6 +461,7 @@ const CreateBuilding = () => {
         </section>
       </div>
       <Footer />
+      
     </div>
   );
 };
