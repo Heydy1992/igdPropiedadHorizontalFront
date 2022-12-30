@@ -112,7 +112,10 @@ const ListTariff = () => {
   useEffect(()  => {
     
       const result = tariff.filter(tariff => {
-        return tariff.concept.toLowerCase().match(search.toLowerCase());
+        return tariff.concept.toLowerCase().match(search.toLowerCase())
+            || tariff.name.toLowerCase().match(search.toLowerCase())
+            || tariff.coefficient.toLowerCase().match(search.toLowerCase()) ;
+
     });
     setFilteredTariff(result);
  
@@ -121,6 +124,13 @@ const ListTariff = () => {
 
   //Columnas configuracion para el dataTable
   const columns =[
+
+    {
+      name:"Nombre", 
+      selector: row => row.name,
+      sortable:true
+    },
+
     {
       name:"Concepto", 
       selector: row => row.concept,

@@ -10,26 +10,102 @@ import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
+import Swal from "sweetalert2";
+import ModalInfo from "./ModalInfo";
 
 
 const ListNews = () => {
 
   const [news, setNews] = useState([]);
+  const [newsById, setNewsById] = useState([]);
+
+  //Filtros
   const [search, setSearch] = useState("");
   const [filteredNews, setFilteredNews] = useState([]);
 
+   //Paginación
+   const [totalRows, setTotalRows] = useState(0);
+   const [perPage, setPerPage] = useState(10);
+
   //Listar propetarios
-  const listNews = async () => {
-    const response = await APIInvoke.invokeGET('/api/Invoices/news');
+  const listNews = async (page) => {
+    const response = await APIInvoke.invokeGET(`/api/Invoices/news?page=${page}&pageSize=${perPage}`);
     setNews(response.items);
+    setTotalRows(response.totalItems);
     setFilteredNews(response.items);
     
     
 
   };
 
+     //Consultar novedades por id
+     const handleNewsById = (id) => {
+
+      const newsId = news.filter(item => item.id === id);
+      setNewsById(newsId);
+     
+  
+     
+      
+    }
+
+      //Paginacion
+  const handlePageChange = (page) => {
+    listNews(page);
+  
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET( `/api/Invoices/news?page=${page}&pageSize=${newPerPage}`);
+    
+    setNews(response.items);
+    setFilteredNews(response.items);
+    setPerPage(newPerPage);
+  };
+
+
+  //Anular tarifas
+  const deleteNews = async (id) => {
+    const data = [id]
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podras revertir la anulación!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Anular!'
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        return APIInvoke.invokePOST(`/api/Invoices/news/state`,data);
+        
+        
+      }
+    }).then((response)=>{
+        
+        if(response.succeeded){
+          
+          Swal.fire(
+            'Anulación',
+            'El Inmueble ha sido anulado con exito!',
+            'success'
+          );
+          listNews(1);
+          
+          
+        }
+    }).catch((err) => {
+      err.succeeded =false
+    })
+    
+
+    
+  }
+
+
+
   useEffect(() => {
-    listNews();
+    listNews(1);
     
   },[]);
 
@@ -81,20 +157,26 @@ const ListNews = () => {
           </Link>
           
           &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-primary" 
-          >
-            <FontAwesomeIcon icon={faPrint} />
-          </Link>
-
+          <button
+                
+                className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleNewsById(row.id)}}
+                disabled={!row.state && "disabled" }
+              >
+                <FontAwesomeIcon icon={faPrint} />
+              </button>
           &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-danger" 
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-danger anular" 
+                onClick={() => {deleteNews(row.id)}}
+                disabled={!row.state && "disabled" }
+               
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
         </>
        
         
@@ -104,7 +186,19 @@ const ListNews = () => {
     },
 
     
-  ] 
+  ];
+
+  const conditionalRowStyles  = [
+    {
+      when: row => !row.state,
+      style:{
+        color: 'red'
+        
+      }
+      
+        
+    }
+  ];
 
     //Configuracion  de paginación
     const paginationOptions = {
@@ -160,10 +254,14 @@ const ListNews = () => {
                   columns={columns}
                   data={filteredNews}
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
-                 
+                  conditionalRowStyles={conditionalRowStyles}
                   subHeader
                   subHeaderComponent={
                     <div className="form-group col-4">
@@ -188,6 +286,10 @@ const ListNews = () => {
         </section>
       </div>
       <Footer />
+
+      <div className="modal fade" id="modal-lg">
+        <ModalInfo newsById={ newsById } />
+      </div>  
     </div>
   );
 };

@@ -1,14 +1,14 @@
 import React from "react";
 
-const ModalInfo = ( { tariffById} ) => {
-  if(tariffById.length > 0){
+const ModalInfo = ( { newsById} ) => {
+  if(newsById.length > 0){
     return(
                    
        
         <div className="modal-dialog">
             <div className="modal-content">
                 <div className="modal-header bg-danger">
-                    <h4 className="modal-title">Información de tarifas</h4>
+                    <h4 className="modal-title">Información de Novedades</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -20,7 +20,7 @@ const ModalInfo = ( { tariffById} ) => {
                             <label>Nombre:</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{tariffById[0].name}</p>
+                            <p style={{fontSize: '12px'}}>{newsById[0].name}</p>
                         </div>
                    </div>
 
@@ -30,7 +30,7 @@ const ModalInfo = ( { tariffById} ) => {
                             <label>Concepto</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{tariffById[0].concept}</p>
+                            <p style={{fontSize: '12px'}}>{newsById[0].concept}</p>
                         </div>
                    </div>
 
@@ -39,7 +39,7 @@ const ModalInfo = ( { tariffById} ) => {
                             <label>Coeficiente:</label>
                         </div>
                         <div className="col-sm-8">
-                            <p style={{fontSize: '12px'}}>{tariffById[0].coefficient}</p>
+                            <p style={{fontSize: '12px'}}>{newsById[0].coefficient}</p>
                         </div>
                    </div>    
 
@@ -48,7 +48,7 @@ const ModalInfo = ( { tariffById} ) => {
                             <label>Fecha de expiración:</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{tariffById[0].expirationDate}</p>
+                            <p style={{fontSize: '12px'}}>{newsById[0].expirationDate}</p>
                         </div>
                    </div> 
 
@@ -58,7 +58,7 @@ const ModalInfo = ( { tariffById} ) => {
                             <label>Valor</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{tariffById[0].value}</p>
+                            <p style={{fontSize: '12px'}}>{newsById[0].value}</p>
                         </div>
                    </div>    
 

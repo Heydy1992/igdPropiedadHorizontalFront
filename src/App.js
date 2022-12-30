@@ -17,6 +17,7 @@ import ListNews from './page/news/ListNews';
 import CreateNews from './page/news/CreateNews';
 import ListMaintenance from './page/maintenance/ListMaintenance';
 import CreateMaintenance from './page/maintenance/CreateMaintenance';
+import CreateBilling from './page/billing/CreateBilling';
 
 
 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/createNews" exact element={<CreateNews />} />
           <Route path="/listMaintenance" exact element={<ListMaintenance />} />
           <Route path="/createMaintenance" exact element={<CreateMaintenance />} />
+          <Route path="/createBilling" exact element={<CreateBilling />} />
         </Routes>
       </Router>
     </div>
