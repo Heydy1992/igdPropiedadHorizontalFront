@@ -10,27 +10,101 @@ import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
+import Swal from "sweetalert2";
+import ModalInfo from "./ModalInfo";
 
 
 
 const ListMaintenance = () => {
 
   const [maintenance, setMaintenance] = useState([]);
+  const [maintenanceById, setMaintenanceById] = useState([]);
+
+  //Filtros
   const [search, setSearch] = useState("");
   const [filteredMaintenance, setFilteredMaintenance] = useState([]);
 
+  //Paginación
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+
   //Listar propetarios
-  const listMaintenance = async () => {
-    const response = await APIInvoke.invokeGET('/api/Maintenances?page=1&pageSize=10');
+  const listMaintenance = async ( page ) => {
+    const response = await APIInvoke.invokeGET(`/api/Maintenances?page=${page}&pageSize=${perPage}`);
     setMaintenance(response.items);
+    setTotalRows(response.totalItems);
     setFilteredMaintenance(response.items);
     
     
 
   };
 
+    //Consultar Mantenimientos por id
+    const handleMaintenanceById = (id) => {
+
+      const maintenanceId = maintenance.filter(item => item.id === id);
+      setMaintenanceById(maintenanceId);
+     
+  
+     
+      
+    }
+
+    //Paginacion
+  const handlePageChange = (page) => {
+    listMaintenance(page);
+  
+  }
+
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET(`/api/Maintenances?page=${page}&pageSize=${newPerPage}`);
+    
+    setMaintenance(response.items);
+    setFilteredMaintenance(response.items);
+    setPerPage(newPerPage);
+  }
+
+  //Anular mantenimientos
+  const deleteMaintenance = async (id) => {
+    const data = [id]
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podras revertir la anulación!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Anular!'
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        return APIInvoke.invokePOST(`/api/Maintenances/state`,data);
+        
+        
+      }
+    }).then((response)=>{
+      
+        if(response.succeeded){
+          
+          Swal.fire(
+            'Anulación',
+            'El Inmueble ha sido anulado con exito!',
+            'success'
+          );
+          listMaintenance(1);
+          
+          
+        }
+    }).catch((err) => {
+      err.succeeded =false
+    })
+    
+
+    
+  }
+
   useEffect(() => {
-    listMaintenance();
+    listMaintenance(1);
     
   },[]);
 //Filtro para buscar
@@ -82,20 +156,27 @@ const columns =[
         </Link>
         
         &nbsp;
-        <Link 
-          to={"#"} 
-          className="btn btn-sm btn-primary" 
-        >
-          <FontAwesomeIcon icon={faPrint} />
-        </Link>
+        <button
+                
+                className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleMaintenanceById(row.id)}}
+                disabled={!row.state && "disabled" }
+              >
+                <FontAwesomeIcon icon={faPrint} />
+              </button>
 
         &nbsp;
-        <Link 
-          to={"#"} 
-          className="btn btn-sm btn-danger" 
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </Link>
+        <button
+                
+                className="btn btn-sm btn-danger anular" 
+                onClick={() => {deleteMaintenance(row.id)}}
+                disabled={!row.state && "disabled" }
+               
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
       </>
      
       
@@ -105,7 +186,23 @@ const columns =[
   },
 
   
+
+  
 ] 
+
+//Filas condicionales
+
+const conditionalRowStyles  = [
+  {
+    when: row => !row.state,
+    style:{
+      color: 'red'
+      
+    }
+    
+      
+  }
+]
 
   //Configuracion  de paginación
   const paginationOptions = {
@@ -159,9 +256,15 @@ const columns =[
               <DataTable
                   columns={columns}
                   data={filteredMaintenance}
+                 
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
+                  conditionalRowStyles={conditionalRowStyles}
                   paginationComponentOptions={paginationOptions}
                  
                   subHeader
@@ -188,6 +291,10 @@ const columns =[
         </section>
       </div>
       <Footer />
+
+      <div className="modal fade" id="modal-lg">
+        <ModalInfo maintenanceById={ maintenanceById } />
+      </div>  
     </div>
   );
 };

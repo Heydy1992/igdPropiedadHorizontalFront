@@ -10,27 +10,62 @@ import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
+import ModalInfo from "./ModalInfo";
 
 
 
 const ListOwner = () => {
 
   const [owner, setOwner ] = useState([]);
+  const [ownerById, setOwnerById] = useState([]);
+
+  //filtros
   const [search, setSearch] = useState("");
   const [filteredOwner, setFilteredOwner] = useState([]);
 
+   //Paginación
+   const [totalRows, setTotalRows] = useState(0);
+   const [perPage, setPerPage] = useState(10);
+   
+
   //Listar propetarios
-  const listOwner = async () => {
-    const response = await APIInvoke.invokeGET('/api/Administrator/owner');
+  const listOwner = async (page) => {
+    const response = await APIInvoke.invokeGET(`/api/Administrator/owner?page=${page}&pageSize=${perPage}`);
     setOwner(response.items);
+    setTotalRows(response.totalItems);
     setFilteredOwner(response.items);
     
     
 
   };
 
+     //Consultar Propetarios  por Id
+     const handleOwnerById = (id) => {
+
+      const ownerId = owner.filter(item => item.id === id);
+      setOwnerById(ownerId);
+     
+  
+     
+      
+    }
+
+    //Paginacion
+  const handlePageChange = (page) => {
+    listOwner(page);
+  
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET(`/api/Administrator/owner?page=${page}&pageSize=${newPerPage}`);
+    
+    setOwner(response.items);
+    setFilteredOwner(response.items);
+    setPerPage(newPerPage);
+  }
+
   useEffect(() => {
-    listOwner();
+    listOwner(1);
     
   },[]);
 
@@ -78,12 +113,18 @@ const ListOwner = () => {
           </Link>
           
           &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-primary" 
-          >
-            <FontAwesomeIcon icon={faPrint} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleOwnerById(row.id)}}
+                
+              >
+                <FontAwesomeIcon icon={faPrint} />
+          </button>
+
+          
 
           
         </>
@@ -154,6 +195,10 @@ const ListOwner = () => {
                   columns={columns}
                   data={filteredOwner}
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
@@ -182,6 +227,12 @@ const ListOwner = () => {
         </section>
       </div>
       <Footer />
+
+      <div className="modal fade" id="modal-lg">
+        <ModalInfo ownerById={ ownerById } />
+      </div>
+
+
     </div>
   );
 };

@@ -11,25 +11,99 @@ import {
   faTrash,
   faPrint,
   faSave,
-} from '@fortawesome/free-solid-svg-icons'
-import DataTable from 'react-data-table-component'
-import 'styled-components'
-import '../../css/dataTable.css'
+} from '@fortawesome/free-solid-svg-icons';
+import DataTable from 'react-data-table-component';
+import 'styled-components';
+import '../../css/dataTable.css';
+import Swal from "sweetalert2";
+import ModalInfo from "./ModalInfo";
 
 const ListBuilding = () => {
   const [commonArea, setCommonArea] = useState([])
+  const [commonAreaById, setCommonAreaById] = useState([]);
+
+  //filtros
   const [search, setSearch] = useState('')
   const [filteredCommonArea, setFilteredCommonArea] = useState([])
 
-  //Listar propetarios
-  const listCommonArea = async () => {
-    const response = await APIInvoke.invokeGET('/api/CommonArea')
+   //Paginación
+   const [totalRows, setTotalRows] = useState(0);
+   const [perPage, setPerPage] = useState(10);
+
+  //Listar Areas comunes
+  const listCommonArea = async (page) => {
+    const response = await APIInvoke.invokeGET(`/api/CommonArea?page=${page}&pageSize=${perPage}`);
     setCommonArea(response.items)
+    setTotalRows(response.totalItems);
     setFilteredCommonArea(response.items)
+  };
+
+   //Consultar areas por id
+   const handleCommonAreaById = (id) => {
+
+    const commonAreaId = commonArea.filter(item => item.id === id);
+    setCommonAreaById(commonAreaId);
+   
+
+   
+    
+  }
+
+  //Paginacion
+  const handlePageChange = (page) => {
+    listCommonArea(page);
+  
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET(`/api/CommonArea?page=${page}&pageSize=${newPerPage}`);
+    
+    setCommonArea(response.items);
+    setFilteredCommonArea(response.items);
+    setPerPage(newPerPage);
+  };
+
+  
+  //Anular areas comunes
+  const deleteCommonArea = async (id) => {
+    const data = [id]
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podras revertir la anulación!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Anular!'
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        return APIInvoke.invokePOST(`/api/CommonArea/state`,data);
+        
+        
+      }
+    }).then((response)=>{
+        
+        if(response.succeeded){
+          
+          Swal.fire(
+            'Anulación',
+            'El Inmueble ha sido anulado con exito!',
+            'success'
+          );
+          listCommonArea(1);
+          
+          
+        }
+    }).catch((err) => {
+      err.succeeded =false
+    })
+    
+
+    
   }
 
   useEffect(() => {
-    listCommonArea()
+    listCommonArea(1);
   }, [])
 
   //Filtro para buscar
@@ -63,17 +137,41 @@ const ListBuilding = () => {
             <FontAwesomeIcon icon={faPenToSquare} />
           </Link>
           &nbsp;
-          <Link to={'#'} className="btn btn-sm btn-primary">
-            <FontAwesomeIcon icon={faPrint} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleCommonAreaById(row.id)}}
+                disabled={!row.state && "disabled" }
+              >
+                <FontAwesomeIcon icon={faPrint} />
+              </button>
           &nbsp;
-          <Link to={'#'} className="btn btn-sm btn-danger">
-            <FontAwesomeIcon icon={faTrash} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-danger anular" 
+                onClick={() => {deleteCommonArea(row.id)}}
+                disabled={!row.state && "disabled" }
+               
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
         </>
       ),
     },
-  ]
+  ];
+  const conditionalRowStyles  = [
+    {
+      when: row => !row.state,
+      style:{
+        color: 'red'
+        
+      }
+      
+        
+    }
+  ];
 
   //Configuracion  de paginación
   const paginationOptions = {
@@ -127,9 +225,14 @@ const ListBuilding = () => {
                   columns={columns}
                   data={filteredCommonArea}
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
+                  conditionalRowStyles={conditionalRowStyles}
                   subHeader
                   subHeaderComponent={
                     <div className="form-group col-4">
@@ -150,6 +253,10 @@ const ListBuilding = () => {
         </section>
       </div>
       <Footer />
+
+      <div className="modal fade" id="modal-lg">
+        <ModalInfo commonAreaById={ commonAreaById } />
+      </div>  
     </div>
   )
 }

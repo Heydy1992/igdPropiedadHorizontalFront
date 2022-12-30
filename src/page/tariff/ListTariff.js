@@ -11,28 +11,101 @@ import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
+import Swal from "sweetalert2";
+import ModalInfo from "./ModalInfo";
 
 
 
 const ListTariff = () => {
   const [tariff, setTariff] = useState([]);
+  const [tariffById, setTariffById] = useState([]);
+
+  //Filtros
   const [search, setSearch] = useState("");
   const [filteredTariff, setFilteredTariff] = useState([]);
 
-  
+   //Paginación
+   const [totalRows, setTotalRows] = useState(0);
+   const [perPage, setPerPage] = useState(10);
 
 
-  //Listar propetarios
-  const listTariff = async () => {
+  //Listar tarifas
+  const listTariff = async (page) => {
     const response = await APIInvoke.invokeGET(
-      "/api/Invoices/tariffs"
+      `/api/Invoices/tariffs?page=${page}&pageSize=${perPage}`
     );
     setTariff(response.items);
+    setTotalRows(response.totalItems);
     setFilteredTariff(response.items);
   };
 
+   //Consultar tarifas por id
+   const handleTariffById = (id) => {
+
+    const tariffId = tariff.filter(item => item.id === id);
+    setTariffById(tariffId);
+   
+
+   
+    
+  }
+
+  //Paginacion
+  const handlePageChange = (page) => {
+    listTariff(page);
+  
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET( `/api/Invoices/tariffs?page=${page}&pageSize=${newPerPage}`);
+    
+    setTariff(response.items);
+    setFilteredTariff(response.items);
+    setPerPage(newPerPage);
+  };
+
+  //Anular tarifas
+  const deleteTariff = async (id) => {
+    const data = [id]
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podras revertir la anulación!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Anular!'
+    }).then((resp) => {
+      if (resp.isConfirmed) {
+        return APIInvoke.invokePOST(`/api/Invoices/tariff/state`,data);
+        
+        
+      }
+    }).then((response)=>{
+        
+        if(response.succeeded){
+          
+          Swal.fire(
+            'Anulación',
+            'El Inmueble ha sido anulado con exito!',
+            'success'
+          );
+          listTariff(1);
+          
+          
+        }
+    }).catch((err) => {
+      err.succeeded =false
+    })
+    
+
+    
+  }
+
+  
+
   useEffect(() => {
-    listTariff();
+    listTariff(1);
   }, []);
 
   //Filtro buscar
@@ -83,20 +156,27 @@ const ListTariff = () => {
           </Link>
           
           &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-primary" 
-          >
-            <FontAwesomeIcon icon={faPrint} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleTariffById(row.id)}}
+                disabled={!row.state && "disabled" }
+              >
+                <FontAwesomeIcon icon={faPrint} />
+              </button>
 
           &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-danger" 
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-danger anular" 
+                onClick={() => {deleteTariff(row.id)}}
+                disabled={!row.state && "disabled" }
+               
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
         </>
        
         
@@ -106,7 +186,18 @@ const ListTariff = () => {
     },
 
     
-  ] 
+  ];
+  const conditionalRowStyles  = [
+    {
+      when: row => !row.state,
+      style:{
+        color: 'red'
+        
+      }
+      
+        
+    }
+  ];
 
   
   //Configuracion  de paginación
@@ -167,10 +258,14 @@ const ListTariff = () => {
                   columns={columns}
                   data={filteredTariff}
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
-                 
+                  conditionalRowStyles={conditionalRowStyles}
                   subHeader
                   subHeaderComponent={
                     <div className="form-group col-4">
@@ -199,6 +294,9 @@ const ListTariff = () => {
         </section>
       </div>
       <Footer />
+      <div className="modal fade" id="modal-lg">
+        <ModalInfo tariffById={ tariffById } />
+      </div>  
     </div>
   );
 };

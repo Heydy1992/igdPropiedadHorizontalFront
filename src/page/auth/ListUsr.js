@@ -10,27 +10,67 @@ import { faPenToSquare, faTrash, faPrint, faSave} from "@fortawesome/free-solid-
 import  DataTable from 'react-data-table-component';   
 import 'styled-components';
 import '../../css/dataTable.css';
+import ModalInfo from "./ModalInfo";
+
 
 
 
 const ListUsr = () => {
 
   const [user, setUser ] = useState([]);
+  const [userById, setUserById] = useState([]);
+
+  //Filtros
   const [search, setSearch] = useState("");
   const [filteredUser, setFilteredUser] = useState([]);
 
+   //Paginación
+   const [totalRows, setTotalRows] = useState(0);
+   const [perPage, setPerPage] = useState(10);
+   
+
   //Listar propetarios
-  const listUser = async () => {
-    const response = await APIInvoke.invokeGET('/api/Administrator');
+  const listUser = async (page) => {
+    const response = await APIInvoke.invokeGET(`/api/Administrator?page=${page}&pageSize=${perPage}`);
     setUser(response.items);
+    setTotalRows(response.totalItems);
     setFilteredUser(response.items);
     
     
 
   };
 
+   //Consultar Usuarios  por Id
+   const handleUserById = (id) => {
+
+    const userId = user.filter(item => item.id === id);
+    setUserById(userId);
+   
+
+   
+    
+  }
+
+  //Paginacion
+  const handlePageChange = (page) => {
+    listUser(page);
+  
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    const response = await APIInvoke.invokeGET(`/api/Administrator?page=${page}&pageSize=${newPerPage}`);
+    
+    setUser(response.items);
+    setFilteredUser(response.items);
+    setPerPage(newPerPage);
+  }
+
+
+  
+
+  
   useEffect(() => {
-    listUser();
+    listUser(1);
     
   },[]);
 
@@ -87,12 +127,16 @@ const ListUsr = () => {
           </Link>
           
           &nbsp;
-          <Link 
-            to={"#"} 
-            className="btn btn-sm btn-primary" 
-          >
-            <FontAwesomeIcon icon={faPrint} />
-          </Link>
+          <button
+                
+                className="btn btn-sm btn-primary" 
+                data-toggle="modal"
+                data-target="#modal-lg"
+                onClick={() => {handleUserById(row.id)}}
+                
+              >
+                <FontAwesomeIcon icon={faPrint} />
+          </button>
 
           
         </>
@@ -169,6 +213,10 @@ const ListUsr = () => {
                   columns={columns}
                   data={filteredUser}
                   pagination
+                  paginationServer
+                  paginationTotalRows={totalRows}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
@@ -197,6 +245,11 @@ const ListUsr = () => {
         </section>
       </div>
       <Footer />
+
+      <div className="modal fade" id="modal-lg">
+        <ModalInfo userById={ userById } />
+      </div>
+
     </div>
   );
 };

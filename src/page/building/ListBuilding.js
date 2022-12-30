@@ -90,7 +90,7 @@ const ListBuilding = () => {
             'El Inmueble ha sido anulado con exito!',
             'success'
           );
-          listBuilding();
+          listBuilding(1);
           
           
         }
