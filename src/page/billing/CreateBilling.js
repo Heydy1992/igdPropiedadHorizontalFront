@@ -12,47 +12,21 @@ const CreateBilling = () => {
   
   const navigate = useNavigate();
 
-  const [building, setBuilding] = useState({
-    type: "",
-    zone:"",
-    number:"",
-    prefix: "",
-    buildingRegistration : "",
-    constructedArea : "" ,
-    coefficient : "",
-    cadastralCard :"",
-    chip : "",
-    causeTo: "",
-    destination: "",
-    state: "",
-    address: "",
-    appraisedvalue: "",
-    stratum: "",
-    depository: "",
-    
-});
+  const [billing, setBilling] = useState({
+   
+    month:1,
+    year:new Date().getFullYear(),
+    processDate:""
+  });
 
   const {
-    type,
-    zone,
-    number,
-    prefix,
-    buildingRegistration ,
-    constructedArea ,
-    coefficient,
-    cadastralCard ,
-    chip,
-    causeTo,
-    destination,
-    state,
-    address,
-    appraisedvalue,
-    stratum,
-    depository,
     
+    month,
+    year,
+    processDate,
 
     
-  } = building;
+  } = billing;
 
 
 
@@ -60,8 +34,8 @@ const CreateBilling = () => {
 
 
   const handleChange = (e) => {
-    setBuilding({
-      ...building,
+    setBilling({
+      ...billing,
       [e.target.name]: e.target.value,
     });
 
@@ -72,37 +46,7 @@ const CreateBilling = () => {
     const createUser = async () => {
     
         const data = {
-            "idBuildingType": parseInt(building.type),
-            "idZone": parseInt(building.zone),
-            "idPerson": 1,
-            "idCauseTo": parseInt(building.causeTo),
-            "idDestination":parseInt(building.destination),
-            "idState": parseInt(building.state),
-            "idLessee": 29,
-            "idUser": 8,
-            "idCoefficient": parseInt(building.coefficient),
-            "number": building.number,
-            "prefix": building.prefix,
-            "buildingRegistration": parseInt(buildingRegistration),
-            "constructedArea": parseInt(building.constructedArea),
-            "cadastralCard": parseInt(building.cadastralCard),
-            "chip": building.chip,
-            "address": building.address,
-            "stratum": building.stratum,
-            "appraisedValue": parseInt(building.appraisedvalue),
-            "depository": building.depository,
-            "observation": "Ninguna",
-            "families":  [] ,
-            "parking": [],
-            "pets": [],
-            "vehicles": []
-
-              
-           
-            
-          
-         
-        }
+         }
         
         const response = await APIInvoke.invokePOST(`/api/Building`, data)
             let msg = "";
@@ -112,23 +56,10 @@ const CreateBilling = () => {
                 navigate("/listBuilding");
                 msg = "Registro creado exitosamente";
                 icon="success";
-                setBuilding({
-                    type: "",
-                    zone:"",
-                    number:"",
-                    prefix: "",
-                    buildingRegistration : "",
-                    constructedArea : "" ,
-                    coefficient : "",
-                    cadastralCard :"",
-                    chip : "",
-                    causeTo: "",
-                    destination: "",
-                    state: "",
-                    address: "",
-                    appraisedvalue: "",
-                    stratum: "",
-                    depository: "",
+                setBilling({
+                  month:1,
+                  year:new Date().getFullYear(),
+                  processDate:"",
             });
             
             }else{
@@ -165,9 +96,9 @@ const CreateBilling = () => {
       <SidebarContainer />
       <div className="content-wrapper">
         <ContentHeader
-          title={"Creación de propiedades"}
-          breadCrumb1={"Listado de propiedades"}
-          breadCrumb2={"Creación de propiedades"}
+          title={"Generar facturas"}
+          breadCrumb1={"Listado de facturas"}
+          breadCrumb2={"Generar facturas"}
           route={"/listBuilding"}
         />
         <section className="content">
@@ -175,291 +106,176 @@ const CreateBilling = () => {
             
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className="row">
-                  <button type="submit" className="btn btn-app bg-primary">
-                    <i className="fas fa-save"></i> Grabar
-                  </button>
-                  <div className="col-sm-3">
-                    <Link className="btn btn-app bg-danger">
-                      <i className="fa fa-ban"></i> Cancelar
-                    </Link>
-                  </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-4">
-                        <div className="form-group">
-                      <label>Periodo de liquidación</label>
-                      <select
-                        className="form-control"
-                        id="type"
-                        name="type"
-                        value={type}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>Periodo de liquidación</option>
-                        <option value={1}>Casa</option>
-                        <option value={2}>Apartamento</option>
-                        <option value={3}>Local</option>
-                        
-                      </select>
-                    </div>
-                  </div>
+                
+                <label>Periodo de Liquidación</label>
+                <div className=" form-group row">
+                  <label forHtml="year" className="col-sm-1 col-form-label">Año</label>
                   <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Zona</label>
-                      <select
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="year"
+                      name="year"
+                      value={year}
+                      onChange={handleChange}
+                      required
+                    />
+                   
+                  </div>
+
+                  <label forHtml="year" className="col-sm-1 col-form-label">Mes</label>
+                  <div className="col-sm-4">
+                  <select
                         className="form-control"
-                        id="zone"
-                        name="zone"
-                        value={zone}
+                        id="month"
+                        name="month"
+                        value={month}
                         onChange={handleChange}
                         required
                       >
-                        <option>Seleccione la zona</option>
-                        <option value={1}>Torre</option>
-                        <option value={2}>Interior</option>
+                        <option value={1}>Enero</option>
+                        <option value={2}>Febrero</option>
+                        <option value={3}>Marzo</option>
+                        <option value={4}>Abril</option>
+                        <option value={5}>Mayo</option>
+                        <option value={6}>Junio</option>
+                        <option value={7}>Julio</option>
+                        <option value={8}>Agosto</option>
+                        <option value={9}>Septiembre</option>
+                        <option value={10}>Octubre</option>
+                        <option value={11}>Noviembre</option>
+                        <option value={12}>Diciembre</option>
                         
                       </select>
-                    </div>
+                   
                   </div>
+
+                  <div className=" row">
+                    <label forHtml="processDate" className="col-sm-3 col-form-label">Fecha de proceso</label>
+                      <div className="col-sm-4">
+                        <input type="date"  
+                               className="form-control"
+                               id="processDate"
+                               name="processDate"
+                               value={processDate}
+                               onChange={handleChange}
+                               required
+                        />
+                      </div> 
+                      <div className="col-sm-6">
+                        <button type="button" 
+                          className="btn btn-primary btn-sm"
+                        >
+                          <i className="fa fa-bell"></i> Consultar
+                        </button>
+                        
+                        <button 
+                          type="button" 
+                          className="btn btn-info btn-flat btn-sm"
+                          >
+                            <i class="fa fa-bell"></i> Grabar
+                        </button>
+                      <button 
+                        type="button" 
+                        className="btn btn-danger btn-sm"
+                      >
+                        <i class="fa fa-bell"></i> Cancelar
+                      </button>
+                    </div> 
+
+                      
+                      
+                     
+                  </div>
+
+                  <div className=" row">
+                     
+                        <table className="table table-striped">
+                          <th>
+                            <thead>
+                              <th>Inmueble</th>
+                              <th>Propetario</th>
+                              <th>Detalle</th>
+                              <th>Fecha factura</th>
+                              <th>Valor admon</th>
+                              <th>IVA</th>
+                              <th>Otras novedades</th>
+                              <th>Otros Cobros</th>
+                              <th>Total iva</th>
+                              <th>Total factura</th>
+
+                            </thead>
+                          </th>
+                        </table> 
+                      </div>
+                     
+
+                    
+
+                 
+               
+              
                  
 
-                  <div className="col-sm-4">
-                    <label>Número</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="number"
-                      name="number"
-                      value={number}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <label>Prefijo</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="prefix"
-                      name="prefix"
-                      value={prefix}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                 
+             
 
                   
-                  <div className="col-sm-4">
-                    <label>Matricula inmoviliaria</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="buildingRegistration"
-                      name="buildingRegistration"
-                      value={buildingRegistration}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                
 
-                  <div className="col-sm-4">
-                    <label>Area construida</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="constructedArea"
-                      name="constructedArea"
-                      value={constructedArea}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Coeficiente</label>
-                      <select
-                        className="form-control"
-                        id="coefficient"
-                        name="coefficient"
-                        value={coefficient}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>Seleccione el coeficiente</option>
-                        <option value={1}>Torre A - B</option>
-                       
-                        
-                      </select>
-                    </div>
-                  </div>
+                
+                
                   
 
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Cedula catrastral</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="cadastralCard"
-                        name="cadastralCard"
-                        value={cadastralCard}
-                        onChange={handleChange}
-                        required
-                      />  
-                    </div>
-                  </div> 
-
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Chip</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="chip"
-                        name="chip"
-                        value={chip}
-                        onChange={handleChange}
-                        required
-                      />  
-                    </div>
-                  </div> 
-
-                
-                 <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Causar a</label>
-                      <select
-                        className="form-control"
-                        id="causeTo"
-                        name="causeTo"
-                        value={causeTo}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>Causar factura a</option>
-                        <option value={1}>Propetario</option>
-                        <option value={2}>Arrendatario</option>
-                        
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Destino</label>
-                      <select
-                        className="form-control"
-                        id="destination"
-                        name="destination"
-                        value={destination}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>Seleccione destino</option>
-                        <option value={1}>Comercial</option>
-                        <option value={2}>Mixto</option>
-                        <option value={3}>Vivienda</option>
-                        
-                      </select>
-                    </div>
-                  </div>
-
-                
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Estado de la propiedad</label>
-                      <select
-                        className="form-control"
-                        id="state"
-                        name="state"
-                        value={state}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>Seleccione Estado</option>
-                        <option value={1}>Ocupado</option>
-                        <option value={2}>Desocupado</option>
-                     
-                        
-                      </select>
-                      
-                    </div>
-                  </div>
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Dirección</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="address"
-                        name="address"
-                        value={address}
-                        onChange={handleChange}
-                        required
-                      />  
-                    </div>
-                  </div> 
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Valor del avaluo</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="appraisedvalue"
-                        name="appraisedvalue"
-                        value={appraisedvalue}
-                        onChange={handleChange}
-                        required
-                      />  
-                    </div>
-                  </div> 
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Estrato</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="stratum"
-                        name="stratum"
-                        value={stratum}
-                        onChange={handleChange}
-                        required
-                      />  
-                    </div>
-                  </div> 
-
-
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Deposito</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="depository"
-                        name="depository"
-                        value={depository}
-                        onChange={handleChange}
-                        required
-                      />  
-                    </div>
-                  </div> 
-
-                
-
-
+                 
                 </div>
             </form>
             </div>
+            <div className=" row">
+              <div className="col-sm-6">
+                <label>Novedades</label>
+              </div>
+           
+                        <table className="table table-striped">
+
+                          <th>
+                            <thead>
+                              <th>Codigo</th>
+                              <th>Concepto</th>
+                              <th>Valor</th>
+                             
+
+                            </thead>
+                          </th>
+                        </table> 
+
+                      </div>  
+
+                      <div className="col-sm-6">
+                       <label>Otros conceptos de cobro</label>
+                      </div>
+           
+                        <table className="table table-striped">
+
+                          <th>
+                            <thead>
+                              <th>Codigo</th>
+                              <th>Concepto</th>
+                              <th>Valor</th>
+                             
+
+                            </thead>
+                          </th>
+                        </table> 
+
+                     
           </div>  
         </section>
+       
+
       </div>
+
+    
       <Footer />
       
     </div>

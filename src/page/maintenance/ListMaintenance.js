@@ -241,7 +241,7 @@ const conditionalRowStyles  = [
 
             <div className="row">
                 <div className=" col-sm-4">
-                  <Link to={"/createMaintenance"}className="btn btn-block btn-danger ">
+                  <Link to={"/createMaintenance"}className="btn btn-block btn-info ">
                     Crear Mantenimientos &nbsp;
                     <FontAwesomeIcon icon={faSave} />
                     </Link>

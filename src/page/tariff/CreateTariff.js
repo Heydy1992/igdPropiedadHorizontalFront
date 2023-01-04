@@ -15,15 +15,16 @@ const CreateTariff = () => {
 
   
   const [tariff, setTariff] = useState({
-    code: "",
-    concept: 0,
-    coefficient: 0,
+    namer: "",
+    code:"",
+    idConcept: 0,
+    idCoefficient: 0, 
     value: 0,
     expirationDate:""
     
   });
 
-  const { code, concept, coefficient, value, expirationDate} = setTariff;
+  const { namer, code, idConcept, idCoefficient, value, expirationDate} = setTariff;
 
   
 
@@ -42,9 +43,10 @@ const CreateTariff = () => {
 
   const createTariff = async () => {
     const data = {
-      "code": tariff.code,
-      "idConcept": parseInt(tariff.concept),
-      "idCoefficient": parseInt(tariff.coefficient),
+      "name" : tariff.namer,
+      "code":tariff.code,
+      "idConcept": parseInt(tariff.idConcept),
+      "idCoefficient": parseInt(tariff.idCoefficient),
       "value": parseInt(tariff.value),
       "expirationDate": tariff.expirationDate,
     };
@@ -65,9 +67,10 @@ const CreateTariff = () => {
       icon = "success";
 
       setTariff({
-        code: "",
-        concept: 0,
-        coefficient: 0,
+        namer: "",
+        code:"",
+        idConcept: 0,
+        idCoefficient: 0,
         value: 0,
         expirationDate: new Date(),
       });
@@ -117,8 +120,22 @@ const CreateTariff = () => {
                 </div>
 
                 <div className="row">
+
+                <div className="col-sm-4">
+                    <label>Detalle</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="namer"
+                      name="namer"
+                      value={namer}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
                   <div className="col-sm-4">
-                    <label>Codigo</label>
+                    <label>Codido</label>
                     <input
                       type="text"
                       className="form-control"
@@ -130,9 +147,12 @@ const CreateTariff = () => {
                     />
                   </div>
 
-                  <Concept concept={concept} handleChange={handleChange} />
 
-                    <Coefficient coefficient={coefficient} handleChange={handleChange}/>
+                 
+
+                  <Concept idConcept={idConcept} handleChange={handleChange} />
+
+                  <Coefficient idCoefficient={idCoefficient} handleChange={handleChange}/>
 
                   <div className="col-sm-4">
                     <label>Valor</label>

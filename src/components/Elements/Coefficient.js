@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import APIInvoke from "../../utils/APIInvoke";
 
 const Coefficient= ({ handleChange }) => {
-  const [coefficient, setCoefficient] = useState([]);
+  const [idCoefficient, setIdCoefficient] = useState([]);
  
   
   
@@ -10,7 +10,7 @@ const Coefficient= ({ handleChange }) => {
   //Listar departamentos
   const listCoefficient = async () => {
     const response = await APIInvoke.invokeGET("/api/Invoices/coefficients");
-        setCoefficient(response.data);
+        setIdCoefficient(response.data);
   };
 
 
@@ -30,13 +30,13 @@ const Coefficient= ({ handleChange }) => {
           <label>Coeficiente</label>
           <select
             className="form-control"
-            id="coefficient"
-            name="coefficient"
+            id="idCoefficient"
+            name="idCoefficient"
            
-            onClick={(e) =>{handleChange(e)}}
+            onChange={(e) =>{handleChange(e)}}
             required
           >
-            {coefficient && coefficient.map((item) => (
+            {idCoefficient && idCoefficient.map((item) => (
               <option value={item.id} key={item.id}>
                 {item.coefficientType}
               </option>

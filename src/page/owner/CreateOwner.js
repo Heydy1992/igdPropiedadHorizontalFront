@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DepartamentAndCity from "../../components/Elements/DepartamentAndCity";
 import ContentHeader from "../../components/home/ContentHeader";
@@ -87,7 +87,9 @@ const CreateOwner = () => {
       
     }
     
+    
     const response = await APIInvoke.invokePOST(`/api/Persons`, data)
+    
     let msg = "";
     let icon = "";
     
@@ -113,10 +115,16 @@ const CreateOwner = () => {
       });
       
     }else{
+      
       switch (response.errors[0]) {
+        
         case "The document already exists!":
           msg="El Documento de identidad ya existe"
           break;
+
+        case "The City or Department not exists!" :
+            msg="Seleccione el departamento" 
+            break;
       
         default:
           break;

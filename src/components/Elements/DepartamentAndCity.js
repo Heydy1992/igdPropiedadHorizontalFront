@@ -17,6 +17,7 @@ const DepartamentAndCity = ({ handleChange }) => {
 
 
   useEffect(() => {
+    
     departmentList();
   }, []);
 
@@ -32,15 +33,13 @@ const DepartamentAndCity = ({ handleChange }) => {
             className="form-control"
             id="department"
             name="department"
-            onChange={(e)=>{
-              setDpt(e.target.value);
-
-            }}
-            onClick={(e) =>{handleChange(e)}}
+            onClick={(e)=>{setDpt(e.target.value)}}
+            onChange={(e) =>{handleChange(e)}}
             required
           >
             {department && department.map((item) => (
               <option value={item.id} key={item.id}>
+            
                 {item.name}
               </option>
             ))}

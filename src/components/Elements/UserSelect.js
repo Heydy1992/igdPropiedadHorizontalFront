@@ -3,16 +3,16 @@ import APIInvoke from "../../utils/APIInvoke";
 
 
 const UserSelect= ({ handleChange }) => {
-  const [user, setUser] = useState([]);
+  const [responsible, setResponsible] = useState([]);
  
 
   
   
 
-  //Listar Propiedades
+  //Listar USUARIOS
   const listUser = async () => {
-    const response = await APIInvoke.invokeGET("/api/Administrator?page=1&pageSize=10");
-        setUser(response.items);
+    const response = await APIInvoke.invokeGET("/api/Administrator");
+        setResponsible(response.items);
        
         
   };
@@ -34,14 +34,14 @@ const UserSelect= ({ handleChange }) => {
           <label>Usuario encargado</label>
           <select
             className="form-control"
-            id="user"
-            name="user"
+            id="responsible"
+            name="responsible"
            
             onClick={(e) =>{handleChange(e)}}
             required
           >
-            {user && user.map((item) => (
-              <option value={item.id} key={item.id}>
+            {responsible && responsible.map((item) => (
+              <option value={item.person.id} key={item.person.id}>
                 {`${item.person.firstName} ${item.person.middleName} ${item.person.firstLastName} ${item.person.secondLastName}`}
               </option>
             ))}

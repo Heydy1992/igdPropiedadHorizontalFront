@@ -16,56 +16,43 @@ import ModalInfo from "./ModalInfo";
 
 
 
-const ListTariff = () => {
-  const [tariff, setTariff] = useState([]);
-  const [tariffById, setTariffById] = useState([]);
+const ListCoefficient = () => {
+  const [coefficient, setCoefficient] = useState([]);
+  const [coefficientById, setCoefficientById] = useState([]);
 
   //Filtros
   const [search, setSearch] = useState("");
-  const [filteredTariff, setFilteredTariff] = useState([]);
-
-   //Paginación
-   const [totalRows, setTotalRows] = useState(0);
-   const [perPage, setPerPage] = useState(10);
+  const [filteredCoefficient, setFilteredCoefficient] = useState([]);
 
 
-  //Listar tarifas
-  const listTariff = async (page) => {
+
+  //Listar coeficientes
+  const listCoefficient = async () => {
     const response = await APIInvoke.invokeGET(
-      `/api/Invoices/tariffs?page=${page}&pageSize=${perPage}`
+      `/api/Invoices/coefficients`
     );
-    setTariff(response.items);
-    setTotalRows(response.totalItems);
-    setFilteredTariff(response.items);
+    
+    setCoefficient(response.data);
+    setFilteredCoefficient(response.data);
   };
 
-   //Consultar tarifas por id
-   const handleTariffById = (id) => {
+   //Consultar coeficientes por id
+   const handleCoefficientById = (id) => {
 
-    const tariffId = tariff.filter(item => item.id === id);
-    setTariffById(tariffId);
+    const coefficientId = coefficient.filter(item => item.id === id);
+    setCoefficientById(coefficientId);
    
 
    
     
   }
 
-  //Paginacion
-  const handlePageChange = (page) => {
-    listTariff(page);
+
+
   
-  }
 
-  const handlePerRowsChange = async (newPerPage, page) => {
-    const response = await APIInvoke.invokeGET( `/api/Invoices/tariffs?page=${page}&pageSize=${newPerPage}`);
-    
-    setTariff(response.items);
-    setFilteredTariff(response.items);
-    setPerPage(newPerPage);
-  };
-
-  //Anular tarifas
-  const deleteTariff = async (id) => {
+  //Anular coeficientes
+  const deleteCoefficient = async (id) => {
     const data = [id]
     Swal.fire({
       title: '¿Estás seguro?',
@@ -90,7 +77,7 @@ const ListTariff = () => {
             'El Inmueble ha sido anulado con exito!',
             'success'
           );
-          listTariff(1);
+          listCoefficient();
           
           
         }
@@ -105,19 +92,19 @@ const ListTariff = () => {
   
 
   useEffect(() => {
-    listTariff(1);
+    listCoefficient();
   }, []);
 
   //Filtro buscar
   useEffect(()  => {
     
-      const result = tariff.filter(tariff => {
-        return tariff.concept.toLowerCase().match(search.toLowerCase())
-            || tariff.name.toLowerCase().match(search.toLowerCase())
-            || tariff.coefficient.toLowerCase().match(search.toLowerCase()) ;
+      const result = coefficient.filter(coefficient => {
+        return coefficient.concept.name.toLowerCase().match(search.toLowerCase())
+            || coefficient.coefficientType.toLowerCase().match(search.toLowerCase())
+            
 
     });
-    setFilteredTariff(result);
+    setFilteredCoefficient(result);
  
   },[search]);
 
@@ -126,30 +113,20 @@ const ListTariff = () => {
   const columns =[
 
     {
-      name:"Nombre", 
-      selector: row => row.name,
+      name:"Detalle", 
+      selector: row => row.coefficientType,
       sortable:true
     },
 
     {
-      name:"Concepto", 
-      selector: row => row.concept,
+      name:"Valor administración", 
+      selector: row => row.admonValue,
       sortable:true
     },
 
     {
       name: "Coeficiente",
-      selector:row => row.coefficient,
-      sortable:true
-    },
-    {
-      name: "Valor",
-      selector:row => row.value,
-      sortable:true
-    },
-    {
-      name: "Fecha de expiración",
-      selector:row => row.expirationDate.substr(0,10),
+      selector:row => row.percentage,
       sortable:true
     },
     
@@ -171,8 +148,8 @@ const ListTariff = () => {
                 className="btn btn-sm btn-primary" 
                 data-toggle="modal"
                 data-target="#modal-lg"
-                onClick={() => {handleTariffById(row.id)}}
-                disabled={!row.state && "disabled" }
+                onClick={() => {handleCoefficientById(row.id)}}
+               
               >
                 <FontAwesomeIcon icon={faPrint} />
               </button>
@@ -181,7 +158,7 @@ const ListTariff = () => {
           <button
                 
                 className="btn btn-sm btn-danger anular" 
-                onClick={() => {deleteTariff(row.id)}}
+                onClick={() => {deleteCoefficient(row.id)}}
                 disabled={!row.state && "disabled" }
                
               >
@@ -197,17 +174,17 @@ const ListTariff = () => {
 
     
   ];
-  const conditionalRowStyles  = [
-    {
-      when: row => !row.state,
-      style:{
-        color: 'red'
+  //const conditionalRowStyles  = [
+   // {
+     // when: row => !row.state,
+      //style:{
+        //color: 'red'
         
-      }
+      //}
       
         
-    }
-  ];
+    //}
+  //];
 
   
   //Configuracion  de paginación
@@ -224,13 +201,13 @@ const ListTariff = () => {
       <div className="content-wrapper">
         <ContentHeader
           breadCrumb1={"Inicio"}
-          breadCrumb2={"Tarifas"}
+          breadCrumb2={"Coeficiente"}
           route={"#"}
         />
         <section className="content">
           <div className="card card-danger">
             <div className="card-header">
-              <h3 className="card-title">Listado de tarifas</h3>
+              <h3 className="card-title">Listado de Coeficientes</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -246,10 +223,10 @@ const ListTariff = () => {
               <div className="row">
               <div className=" col-sm-2">
                   <Link
-                    to={"/createTariff"}
+                    to={"/createCoefficient"}
                     className="btn btn-block btn-info btn-sm"
                   >
-                    Crear tarifas &nbsp;
+                    Crear coeficiente &nbsp;
                     <FontAwesomeIcon icon={faSave} />
                   </Link>
                 </div>
@@ -266,16 +243,12 @@ const ListTariff = () => {
          
                 <DataTable
                   columns={columns}
-                  data={filteredTariff}
+                  data={filteredCoefficient}
                   pagination
-                  paginationServer
-                  paginationTotalRows={totalRows}
-                  onChangeRowsPerPage={handlePerRowsChange}
-                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
-                  conditionalRowStyles={conditionalRowStyles}
+                  
                   subHeader
                   subHeaderComponent={
                     <div className="form-group col-4">
@@ -305,10 +278,10 @@ const ListTariff = () => {
       </div>
       <Footer />
       <div className="modal fade" id="modal-lg">
-        <ModalInfo tariffById={ tariffById } />
+        <ModalInfo coefficientById={ coefficientById } />
       </div>  
     </div>
   );
 };
 
-export default ListTariff;
+export default ListCoefficient;

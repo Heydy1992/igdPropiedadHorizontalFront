@@ -7,48 +7,50 @@ import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import Swal from "sweetalert2";
 import Concept from "../../components/Elements/Concept";
-import BuildingSelect from "../../components/Elements/BuildingSelect";
 
 
-const CreateNews = () => {
+
+const CreateCoefficient= () => {
   const navigate = useNavigate();
 
   
-  const [news, setNews] = useState({
-    building: 0,
+  const [coefficient, setCoefficient] = useState({
+    
+    concept: "",
+    admonValue: 0,
     idConcept: 0,
-    value: 0,
-    expirationDate:""
+    percentage:0
     
   });
 
-  const { building, idConcept, value, expirationDate} = setNews;
+  const { concept, admonValue, idConcept, percentage} = setCoefficient;
 
   
 
-  
+
   
   const handleChange = (e) => {
 
    
 
-    setNews({
-      ...news,
+    setCoefficient({
+      ...coefficient,
       [e.target.name]: e.target.value,
     });
   };
 
 
-  const createNews = async () => {
+  const createCoefficient = async () => {
     const data = {
-      "idBuilding": parseInt(news.building),
-      "idConcept": parseInt(news.idConcept),
-      "value": parseInt(news.value),
-      "expirationDate": news.expirationDate,
+      concept: coefficient.concept,
+      admonValue: parseInt(coefficient.admonValue),
+      idConcept: parseInt(coefficient.idConcept),
+      percentage:parseInt(coefficient.percentage)
+      
     };
 
     const response = await APIInvoke.invokePOST(
-      `/api/Invoices/news`,
+      `/api/Coefficient`,
       data
     );
     let msg = "";
@@ -58,16 +60,15 @@ const CreateNews = () => {
     console.log(data)
     if (response.succeeded) {
 
-      navigate("/listNews");
+      navigate("/listCoefficient");
       msg = "Registro creado exitosamente";
       icon = "success";
 
-      setNews({
-        building: 0,
+      setCoefficient({
+        concept: "",
+        admonValue: 0,
         idConcept: 0,
-        coefficient: 0,
-        value: 0,
-        expirationDate: "",
+        percentage:0
       });
     } else {
       msg = "Por favor verificar los datos ingresados";
@@ -85,7 +86,7 @@ const CreateNews = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createNews();
+    createCoefficient();
   };
 
   return (
@@ -94,10 +95,10 @@ const CreateNews = () => {
       <SidebarContainer />
       <div className="content-wrapper">
         <ContentHeader
-          title={"Creación de Novedades"}
-          breadCrumb1={"Listado de Novedades"}
-          breadCrumb2={"Creación de Novedades"}
-          route={"/listNews"}
+          title={"Creación de coeficientes"}
+          breadCrumb1={"Listado de coeficientes"}
+          breadCrumb2={"Creación de coeficientes"}
+          route={"/listCoefficient"}
         />
         <section className="content">
           <div className="card card-danger">
@@ -114,21 +115,32 @@ const CreateNews = () => {
                   </div>
                 </div>
 
-                <div className="row"> 
-                  <BuildingSelect  building={building} handleChange={handleChange}/>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <label>Descripción</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="concept"
+                      name="concept"
+                      value={concept}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
                   <Concept idConcept={idConcept} handleChange={handleChange} />
 
-                </div>
-                <div className="row"> 
+                   
+
                   <div className="col-sm-4">
-                    <label>Valor</label>
+                    <label>Valor administración</label>
                     <input
                       type="number"
                       className="form-control"
-                      id="value"
-                      name="value"
-                      value={value}
+                      id="admonValue"
+                      name="admonValue"
+                      value={admonValue}
                       onChange={handleChange}
                       required
                     />
@@ -137,13 +149,13 @@ const CreateNews = () => {
                  
 
                   <div className="col-sm-4">
-                    <label>Fecha de vencimiento</label>
+                    <label>Porcentaje de coeficiente</label>
                  
-                    <input type="date"  
+                    <input type="text"  
                         className="form-control"
-                        id="expirationDate"
-                        name="expirationDate"
-                        value={expirationDate}
+                        id="percentage"
+                        name="percentage"
+                        value={percentage}
                         onChange={handleChange}
                         required/>
                   </div>  
@@ -159,4 +171,4 @@ const CreateNews = () => {
   );
 };
 
-export default CreateNews;
+export default CreateCoefficient;

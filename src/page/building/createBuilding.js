@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ContentHeader from "../../components/home/ContentHeader";
 import Footer from "../../components/home/Footer";
@@ -6,6 +6,8 @@ import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import Swal from 'sweetalert2';
+import Coefficient from "../../components/Elements/Coefficient";
+
 
 const CreateBuilding = () => {
 
@@ -19,7 +21,7 @@ const CreateBuilding = () => {
     prefix: "",
     buildingRegistration : "",
     constructedArea : "" ,
-    coefficient : "",
+    idCoefficient : "",
     cadastralCard :"",
     chip : "",
     causeTo: "",
@@ -39,7 +41,7 @@ const CreateBuilding = () => {
     prefix,
     buildingRegistration ,
     constructedArea ,
-    coefficient,
+    idCoefficient,
     cadastralCard ,
     chip,
     causeTo,
@@ -80,7 +82,7 @@ const CreateBuilding = () => {
             "idState": parseInt(building.state),
             "idLessee": 29,
             "idUser": 8,
-            "idCoefficient": parseInt(building.coefficient),
+            "idCoefficient": parseInt(building.idCoefficient),
             "number": building.number,
             "prefix": building.prefix,
             "buildingRegistration": parseInt(buildingRegistration),
@@ -119,7 +121,7 @@ const CreateBuilding = () => {
                     prefix: "",
                     buildingRegistration : "",
                     constructedArea : "" ,
-                    coefficient : "",
+                    idCoefficient : "",
                     cadastralCard :"",
                     chip : "",
                     causeTo: "",
@@ -277,24 +279,8 @@ const CreateBuilding = () => {
                     />
                   </div>
 
-                  <div className="col-sm-4">
-                    <div className="form-group">
-                      <label>Coeficiente</label>
-                      <select
-                        className="form-control"
-                        id="coefficient"
-                        name="coefficient"
-                        value={coefficient}
-                        onChange={handleChange}
-                        required
-                      >
-                        <option>Seleccione el coeficiente</option>
-                        <option value={1}>Torre A - B</option>
-                       
-                        
-                      </select>
-                    </div>
-                  </div>
+                  <Coefficient idCoefficient={idCoefficient} handleChange={handleChange}/>
+
                   
 
                   <div className="col-sm-4">
@@ -420,20 +406,29 @@ const CreateBuilding = () => {
                     </div>
                   </div> 
 
-                  <div className="col-sm-4">
+                  
+                 <div className="col-sm-4">
                     <div className="form-group">
                       <label>Estrato</label>
-                      <input
-                        type="text"
+                      <select
                         className="form-control"
                         id="stratum"
                         name="stratum"
                         value={stratum}
                         onChange={handleChange}
                         required
-                      />  
+                      >
+                        
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                        <option value={6}>6</option>
+                        
+                      </select>
                     </div>
-                  </div> 
+                  </div>
 
 
                   <div className="col-sm-4">

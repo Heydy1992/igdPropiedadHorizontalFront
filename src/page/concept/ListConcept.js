@@ -16,108 +16,59 @@ import ModalInfo from "./ModalInfo";
 
 
 
-const ListTariff = () => {
-  const [tariff, setTariff] = useState([]);
-  const [tariffById, setTariffById] = useState([]);
+const ListConcept = () => {
+  const [concept, setConcept] = useState([]);
+  const [conceptById, setConceptById] = useState([]);
 
   //Filtros
   const [search, setSearch] = useState("");
-  const [filteredTariff, setFilteredTariff] = useState([]);
-
-   //Paginación
-   const [totalRows, setTotalRows] = useState(0);
-   const [perPage, setPerPage] = useState(10);
+  const [filteredConcept, setFilteredConcept] = useState([]);
 
 
-  //Listar tarifas
-  const listTariff = async (page) => {
+
+  //Listar conceptos
+  const listConcept = async () => {
     const response = await APIInvoke.invokeGET(
-      `/api/Invoices/tariffs?page=${page}&pageSize=${perPage}`
+      `/api/Invoices/concepts`
     );
-    setTariff(response.items);
-    setTotalRows(response.totalItems);
-    setFilteredTariff(response.items);
+    
+    setConcept(response.data);
+    setFilteredConcept(response.data);
   };
 
-   //Consultar tarifas por id
-   const handleTariffById = (id) => {
+   //Consultar conceptos por id
+   const handleConceptById = (id) => {
 
-    const tariffId = tariff.filter(item => item.id === id);
-    setTariffById(tariffId);
+    const conceptId = concept.filter(item => item.id === id);
+    setConceptById(conceptId);
    
 
    
     
   }
 
-  //Paginacion
-  const handlePageChange = (page) => {
-    listTariff(page);
+
+
   
-  }
 
-  const handlePerRowsChange = async (newPerPage, page) => {
-    const response = await APIInvoke.invokeGET( `/api/Invoices/tariffs?page=${page}&pageSize=${newPerPage}`);
-    
-    setTariff(response.items);
-    setFilteredTariff(response.items);
-    setPerPage(newPerPage);
-  };
-
-  //Anular tarifas
-  const deleteTariff = async (id) => {
-    const data = [id]
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: "No podras revertir la anulación!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Anular!'
-    }).then((resp) => {
-      if (resp.isConfirmed) {
-        return APIInvoke.invokePOST(`/api/Invoices/tariff/state`,data);
-        
-        
-      }
-    }).then((response)=>{
-        
-        if(response.succeeded){
-          
-          Swal.fire(
-            'Anulación',
-            'El Inmueble ha sido anulado con exito!',
-            'success'
-          );
-          listTariff(1);
-          
-          
-        }
-    }).catch((err) => {
-      err.succeeded =false
-    })
-    
-
-    
-  }
+  
 
   
 
   useEffect(() => {
-    listTariff(1);
+    listConcept();
   }, []);
 
   //Filtro buscar
   useEffect(()  => {
     
-      const result = tariff.filter(tariff => {
-        return tariff.concept.toLowerCase().match(search.toLowerCase())
-            || tariff.name.toLowerCase().match(search.toLowerCase())
-            || tariff.coefficient.toLowerCase().match(search.toLowerCase()) ;
+      const result = concept.filter(concept => {
+        return concept.name.toLowerCase().match(search.toLowerCase())
+           
+            
 
     });
-    setFilteredTariff(result);
+    setFilteredConcept(result);
  
   },[search]);
 
@@ -126,30 +77,20 @@ const ListTariff = () => {
   const columns =[
 
     {
-      name:"Nombre", 
+      name:"Detalle", 
       selector: row => row.name,
       sortable:true
     },
 
     {
-      name:"Concepto", 
-      selector: row => row.concept,
+      name:"Cuenta de ingreso", 
+      selector: row => row.revenueAccount,
       sortable:true
     },
 
     {
-      name: "Coeficiente",
-      selector:row => row.coefficient,
-      sortable:true
-    },
-    {
-      name: "Valor",
-      selector:row => row.value,
-      sortable:true
-    },
-    {
-      name: "Fecha de expiración",
-      selector:row => row.expirationDate.substr(0,10),
+      name: "Cuenta de cliente",
+      selector:row => row.codCue,
       sortable:true
     },
     
@@ -171,22 +112,13 @@ const ListTariff = () => {
                 className="btn btn-sm btn-primary" 
                 data-toggle="modal"
                 data-target="#modal-lg"
-                onClick={() => {handleTariffById(row.id)}}
-                disabled={!row.state && "disabled" }
+                onClick={() => {handleConceptById(row.id)}}
+               
               >
                 <FontAwesomeIcon icon={faPrint} />
               </button>
 
-          &nbsp;
-          <button
-                
-                className="btn btn-sm btn-danger anular" 
-                onClick={() => {deleteTariff(row.id)}}
-                disabled={!row.state && "disabled" }
-               
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
+          
         </>
        
         
@@ -197,17 +129,7 @@ const ListTariff = () => {
 
     
   ];
-  const conditionalRowStyles  = [
-    {
-      when: row => !row.state,
-      style:{
-        color: 'red'
-        
-      }
-      
-        
-    }
-  ];
+ 
 
   
   //Configuracion  de paginación
@@ -224,13 +146,13 @@ const ListTariff = () => {
       <div className="content-wrapper">
         <ContentHeader
           breadCrumb1={"Inicio"}
-          breadCrumb2={"Tarifas"}
+          breadCrumb2={"Conceptos"}
           route={"#"}
         />
         <section className="content">
           <div className="card card-danger">
             <div className="card-header">
-              <h3 className="card-title">Listado de tarifas</h3>
+              <h3 className="card-title">Listado de Conceptos</h3>
               <div className="card-tools">
                 <button
                   type="button"
@@ -246,10 +168,10 @@ const ListTariff = () => {
               <div className="row">
               <div className=" col-sm-2">
                   <Link
-                    to={"/createTariff"}
-                    className="btn btn-block btn-info btn-sm"
+                    to={"/createConcept"}
+                    className="btn btn-block btn-danger btn-sm"
                   >
-                    Crear tarifas &nbsp;
+                    Crear conceptos &nbsp;
                     <FontAwesomeIcon icon={faSave} />
                   </Link>
                 </div>
@@ -266,16 +188,12 @@ const ListTariff = () => {
          
                 <DataTable
                   columns={columns}
-                  data={filteredTariff}
+                  data={filteredConcept}
                   pagination
-                  paginationServer
-                  paginationTotalRows={totalRows}
-                  onChangeRowsPerPage={handlePerRowsChange}
-                  onChangePage={handlePageChange}
                   fixedHeader
                   fixedHeaderScrollHeight="400px"
                   paginationComponentOptions={paginationOptions}
-                  conditionalRowStyles={conditionalRowStyles}
+                  
                   subHeader
                   subHeaderComponent={
                     <div className="form-group col-4">
@@ -305,10 +223,10 @@ const ListTariff = () => {
       </div>
       <Footer />
       <div className="modal fade" id="modal-lg">
-        <ModalInfo tariffById={ tariffById } />
+        <ModalInfo conceptById={ conceptById } />
       </div>  
     </div>
   );
 };
 
-export default ListTariff;
+export default ListConcept;

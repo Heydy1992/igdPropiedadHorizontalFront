@@ -61,9 +61,22 @@ const Menu = () => {
           <ul className="nav nav-treeview">
             <li className="nav-item">
               <Link to={"/listBuilding"} className="nav-link">
-                <i className="far fa-circle nav-icon" />
-                <p>Inmuebles</p>
+                <i className="fa fa-home nav-icon" />
+                <p>Inmuebles
+                <i className="right fas fa-angle-left" />
+                </p>
               </Link>
+              <ul className="nav nav-treeview">
+                <li className="nav-item">
+                  <Link to={"/listCoefficient"} className="nav-link">
+                    <i className="far fa-circle nav-icon" />
+                    <p>Coeficientes</p>
+                  </Link>
+              
+                </li> 
+              </ul>
+                
+
             </li>
             <li className="nav-item">
               <Link to={"/listMaintenance"} className="nav-link">
@@ -106,6 +119,12 @@ const Menu = () => {
               <Link to={"/listNews"} className="nav-link">
                 <i className="far fa-circle nav-icon" />
                 <p>Novedades</p>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/listConcept"} className="nav-link">
+                <i className="far fa-circle nav-icon" />
+                <p>Conceptos de factura</p>
               </Link>
             </li>
           </ul>

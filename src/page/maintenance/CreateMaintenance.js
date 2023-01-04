@@ -6,7 +6,6 @@ import NavBar from "../../components/menu/NavBar";
 import SidebarContainer from "../../components/menu/SidebarContainer";
 import APIInvoke from "../../utils/APIInvoke";
 import Swal from "sweetalert2";
-import Concept from "../../components/Elements/Concept";
 import SelectCommonArea from "../../components/Elements/SelectCommonArea";
 import UserSelect from "../../components/Elements/UserSelect";
 
@@ -63,10 +62,10 @@ const CreateMaintenance = () => {
             "period": parseInt(maintenance.period),
             "quantity": parseInt(maintenance.quantity),
             "initialDate": maintenance.initialDate,
-            "consecutivo": "0001",
+            "consecutivo": "0005",
             "cost": maintenance.cost,
             "observation": maintenance.observation,
-            "responsible": maintenance.responsible,
+            "responsible": parseInt(maintenance.responsible),
             "user": 8
           }
     };

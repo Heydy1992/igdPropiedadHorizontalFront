@@ -16,8 +16,11 @@ import CreateTariff from './page/tariff/CreateTariff';
 import ListNews from './page/news/ListNews';
 import CreateNews from './page/news/CreateNews';
 import ListMaintenance from './page/maintenance/ListMaintenance';
-import CreateMaintenance from './page/maintenance/CreateMaintenance';
-import CreateBilling from './page/billing/CreateBilling';
+import CreateMaintenance from './page/maintenance/CreateMaintenance';import CreateBilling from './page/billing/CreateBilling';
+import ListCoefficient from './page/coefficient/ListCoefficient';
+import CreateCoefficient from './page/coefficient/CreateCoefficient';
+import ListConcept from './page/concept/ListConcept';
+import CreateConcept from './page/concept/CreateConcept';
 
 
 
@@ -46,6 +49,10 @@ function App() {
           <Route path="/listMaintenance" exact element={<ListMaintenance />} />
           <Route path="/createMaintenance" exact element={<CreateMaintenance />} />
           <Route path="/createBilling" exact element={<CreateBilling />} />
+          <Route path='/listCoefficient' exact element={<ListCoefficient />} />
+          <Route path='/createCoefficient' exact element={<CreateCoefficient />} />
+          <Route path='/listConcept' exact element={<ListConcept />} />
+          <Route path='/createConcept' exact element={<CreateConcept />} />
         </Routes>
       </Router>
     </div>

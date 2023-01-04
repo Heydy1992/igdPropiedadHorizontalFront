@@ -1,14 +1,14 @@
 import React from "react";
 
-const ModalInfo = ( { commonAreaById} ) => {
-  if(commonAreaById.length > 0){
+const ModalInfo = ( { conceptById} ) => {
+  if(conceptById.length > 0){
     return(
                    
        
         <div className="modal-dialog">
             <div className="modal-content">
                 <div className="modal-header bg-danger">
-                    <h4 className="modal-title">Información de Areas comunes</h4>
+                    <h4 className="modal-title">Información de Conceptos</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -16,50 +16,36 @@ const ModalInfo = ( { commonAreaById} ) => {
                 <div className="modal-body">
                    
                    <div className="row">
-                        <div className="col-sm-3">
-                            <label>Nombre:</label>
+                        <div className="col-sm-4">
+                            <label>Detalle:</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].name}</p>
+                            <p style={{fontSize: '12px'}}>{conceptById[0].name}</p>
                         </div>
                    </div>
 
 
                     <div className="row">
-                        <div className="col-sm-3">
-                            <label>Horas Maximas:</label>
+                        <div className="col-sm-4">
+                            <label>Cuenta de ingreso</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].maxHour}</p>
+                            <p style={{fontSize: '12px'}}>{conceptById[0].revenueAccount}</p>
                         </div>
                    </div>
 
                     <div className="row">
-                        <div className="col-sm-3">
-                            <label>Hora minima:</label>
+                        <div className="col-sm-4">
+                            <label>Cuenta cliente:</label>
                         </div>
                         <div className="col-sm-8">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].minHour}</p>
+                            <p style={{fontSize: '12px'}}>{conceptById[0].codCue}</p>
                         </div>
                    </div>    
 
-                   <div className="row">
-                        <div className="col-sm-3">
-                            <label>Precio:</label>
-                        </div>
-                        <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].price}</p>
-                        </div>
-                   </div> 
 
 
-                    <div className="row">
-                        <div className="col-sm-3">
-                            {commonAreaById[0].reserved && <label>Reservable</label> }
-                        </div>
-                        
-                   </div>    
-
+                   
                        
                            
                 </div>

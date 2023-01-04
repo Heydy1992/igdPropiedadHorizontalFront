@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import APIInvoke from "../../utils/APIInvoke";
 
 const Concept= ({ handleChange }) => {
-  const [concept, setConcept] = useState([]);
+  const [idConcept, setIdConcept] = useState([]);
  
   
   
 
-  //Listar departamentos
+  //Listar conceptos
   const listConcept = async () => {
     const response = await APIInvoke.invokeGET("/api/Invoices/concepts");
-   
-    setConcept(response.data);
+    
+    setIdConcept(response.data);
   };
 
 
@@ -31,15 +31,15 @@ const Concept= ({ handleChange }) => {
           <label>Concepto</label>
           <select
             className="form-control"
-            id="concept"
-            name="concept"
+            id="idConcept"
+            name="idConcept"
            
-            onClick={(e) =>{handleChange(e)}}
+            onChange={(e) =>{handleChange(e)}}
             required
           >
-            {concept && concept.map((item) => (
+            {idConcept && idConcept.map((item) => (
               <option value={item.id} key={item.id}>
-                {item.nomFac}
+                {item.name}
               </option>
             ))}
           </select>

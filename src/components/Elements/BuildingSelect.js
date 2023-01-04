@@ -10,7 +10,7 @@ const BuildingSelect= ({ handleChange }) => {
 
   //Listar Propiedades
   const listBuilding = async () => {
-    const response = await APIInvoke.invokeGET("/api/Building?page=1&pageSize=10");
+    const response = await APIInvoke.invokeGET("/api/Building");
         setBuilding(response.items);
        
         

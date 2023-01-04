@@ -1,14 +1,14 @@
 import React from "react";
 
-const ModalInfo = ( { commonAreaById} ) => {
-  if(commonAreaById.length > 0){
+const ModalInfo = ( { coefficientById} ) => {
+  if(coefficientById.length > 0){
     return(
                    
        
         <div className="modal-dialog">
             <div className="modal-content">
                 <div className="modal-header bg-danger">
-                    <h4 className="modal-title">Información de Areas comunes</h4>
+                    <h4 className="modal-title">Información de coeficientes</h4>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -20,46 +20,40 @@ const ModalInfo = ( { commonAreaById} ) => {
                             <label>Nombre:</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].name}</p>
+                            <p style={{fontSize: '12px'}}>{coefficientById[0].coefficientType}</p>
                         </div>
                    </div>
 
 
                     <div className="row">
                         <div className="col-sm-3">
-                            <label>Horas Maximas:</label>
+                            <label>Valor administración</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].maxHour}</p>
+                            <p style={{fontSize: '12px'}}>{coefficientById[0].admonValue}</p>
                         </div>
                    </div>
 
                     <div className="row">
                         <div className="col-sm-3">
-                            <label>Hora minima:</label>
+                            <label>Concepto:</label>
                         </div>
                         <div className="col-sm-8">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].minHour}</p>
+                            <p style={{fontSize: '12px'}}>{coefficientById[0].concept.name}</p>
                         </div>
                    </div>    
 
                    <div className="row">
                         <div className="col-sm-3">
-                            <label>Precio:</label>
+                            <label>Porcentaje de coeficiente</label>
                         </div>
                         <div className="col-sm-4">
-                            <p style={{fontSize: '12px'}}>{commonAreaById[0].price}</p>
+                            <p style={{fontSize: '12px'}}>{coefficientById[0].percentage}</p>
                         </div>
                    </div> 
 
 
-                    <div className="row">
-                        <div className="col-sm-3">
-                            {commonAreaById[0].reserved && <label>Reservable</label> }
-                        </div>
-                        
-                   </div>    
-
+                   
                        
                            
                 </div>
